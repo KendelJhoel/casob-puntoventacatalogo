@@ -215,12 +215,18 @@ while (true) {
                 break;
             }
 
-            $rutaTicket = $carrito->emitirTicket();
+            // Persiste el ticket en JSON y obtiene la ruta.
+            $rutaTicket   = $carrito->emitirTicket();
+            $numeroTicket = pathinfo(basename($rutaTicket), PATHINFO_FILENAME);
+            $numeroTicket = str_replace('ticket_', '', $numeroTicket);
+
             limpiarPantalla();
             titulo("TICKET EMITIDO");
-            mostrarCarrito($carrito);
-            exito("Ticket guardado en: {$rutaTicket}");
-            info("Puedes verlo con:  cat " . basename(dirname($rutaTicket)) . '/' . basename($rutaTicket));
+
+            // Imprime el recibo estilizado en pantalla.
+            $carrito->imprimirTicketTerminal($numeroTicket);
+
+            exito("Ticket JSON guardado en: {$rutaTicket}");
             echo PHP_EOL;
 
             // Reiniciar carrito para una nueva venta.
@@ -229,6 +235,7 @@ while (true) {
             limpiarPantalla();
             titulo("SISTEMA DE PUNTO DE VENTA — Caso B");
             break;
+
 
         // ── Limpiar carrito ───────────────────────────────────────────────
         case 'L':

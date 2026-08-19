@@ -150,7 +150,6 @@ function mostrarMenu(): void
 {
     seccion("OPCIONES");
     info("[A] Agregar ítem al carrito");
-    info("[V] Ver carrito");
     info("[C] Cobrar y emitir ticket");
     info("[L] Limpiar carrito");
     info("[S] Salir");
@@ -196,13 +195,6 @@ while (true) {
             }
 
             sleep(1);
-            limpiarPantalla();
-            titulo("SISTEMA DE PUNTO DE VENTA — Caso B");
-            break;
-
-        // ── Ver carrito (solo pausa) ───────────────────────────────────────
-        case 'V':
-            leer(PHP_EOL . "  Presiona Enter para continuar...");
             limpiarPantalla();
             titulo("SISTEMA DE PUNTO DE VENTA — Caso B");
             break;

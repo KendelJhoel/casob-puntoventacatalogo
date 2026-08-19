@@ -70,14 +70,14 @@ class Carrito
      */
     public function emitirTicket(): string
     {
-        $timestamp = date('Ymd_His');
+        $timestamp     = date('Ymd_His');
         $nombreArchivo = "ticket_{$timestamp}.json";
-        $rutaCompleta = $this->directorioTickets . '/' . $nombreArchivo;
+        $rutaCompleta  = $this->directorioTickets . '/' . $nombreArchivo;
 
         $detallesItems = [];
         foreach ($this->items as $item) {
             $detallesItems[] = [
-                'detalle' => $item->obtenerDetalle(),
+                'detalle'      => $item->obtenerDetalle(),
                 'precio_final' => round($item->calcularPrecioFinal(), 2),
             ];
         }
@@ -85,8 +85,8 @@ class Carrito
         $datosTicket = [
             'numero_ticket' => $timestamp,
             'fecha_emision' => date('Y-m-d H:i:s'),
-            'items' => $detallesItems,
-            'total' => round($this->calcularTotal(), 2),
+            'items'         => $detallesItems,
+            'total'         => round($this->calcularTotal(), 2),
         ];
 
         // Persistencia en archivo JSON (manejo de archivos).
@@ -100,21 +100,32 @@ class Carrito
      * Imprime en la terminal un recibo con estilo de ticket físico.
      * Agrupa los ítems por nombre, mostrando cantidad y subtotal por línea.
      *
+     * Regla de alineación: cada línea del ticket tiene exactamente $ancho=51
+     * caracteres VISIBLES entre los bordes │. Los códigos ANSI se aplican
+     * SIEMPRE fuera de str_pad() para no distorsionar el padding.
+     *
+     * Layout de columnas (suma = 51 chars):
+     *   '  %-26s %8s x%-2d %9s'
+     *    2 + 26 + 1 + 8 + 2 + 2 + 1 + 9 = 51 ✓
+     *
      * @param string $numeroTicket El identificador del ticket (timestamp).
      */
     public function imprimirTicketTerminal(string $numeroTicket): void
     {
-        // Ancho interno del ticket (sin los bordes laterales).
         $ancho = 51;
         $borde = str_repeat('─', $ancho);
 
-        $centrar = fn(string $texto): string =>
-            str_pad($texto, $ancho, ' ', STR_PAD_BOTH);
-
+        // Línea completa: margen + borde izq + contenido padded a $ancho + borde der.
+        // Usa mb_str_pad para manejar correctamente tildes y caracteres multibyte.
         $linea = fn(string $contenido): string =>
-            '│' . str_pad($contenido, $ancho) . '│';
+            '  │' . mb_str_pad($contenido, $ancho) . '│';
 
-        // ── Agrupar ítems por nombre para mostrar cantidad ─────────────────
+        // Centra $texto (sin ANSI) en $ancho chars (multibyte-safe).
+        $centrar = fn(string $texto): string =>
+            mb_str_pad($texto, $ancho, ' ', STR_PAD_BOTH);
+
+
+        // Agrupar ítems por nombre para mostrar cantidad por línea.
         $agrupados = [];
         foreach ($this->items as $item) {
             $nombre = $item->getNombre();
@@ -124,53 +135,65 @@ class Carrito
             $agrupados[$nombre]['cantidad']++;
         }
 
-        // ── Dibujar el ticket ──────────────────────────────────────────────
+        // Formato de filas — 2+26+1+8+2+2+1+9 = 51 chars exactos.
+        $formatoFila     = '  %-26s %8s x%-2d %9s';
+        // Formato cabecera — 2+26+1+8+1+3+1+9 = 51 chars exactos.
+        $formatoCabecera = '  %-26s %8s %3s %9s';
+
+        // ── Dibujar el ticket ─────────────────────────────────────────────
         echo PHP_EOL;
         echo "  ┌{$borde}┐" . PHP_EOL;
+
+        // Título: ANSI fuera de str_pad para no corromper el ancho.
         echo '  │' . "\033[1;33m" . $centrar('★  PUNTO DE VENTA  ★') . "\033[0m" . '│' . PHP_EOL;
-        echo '  │' . $centrar('Caso B — Sistema de Catálogo') . '│' . PHP_EOL;
+        echo $linea($centrar('Caso B — Sistema de Catálogo')) . PHP_EOL;
         echo "  ├{$borde}┤" . PHP_EOL;
-        echo '  ' . $linea("  Ticket N°: {$numeroTicket}") . PHP_EOL;
-        echo '  ' . $linea("  Fecha:     " . date('Y-m-d H:i:s')) . PHP_EOL;
-        echo "  ├{$borde}┤" . PHP_EOL;
-
-        // Cabecera de columnas.
-        $cabecera = sprintf('  %-28s %8s %3s %9s', 'PRODUCTO', 'P.UNIT', 'QTY', 'SUBTOTAL');
-        echo '  │' . "\033[1m" . str_pad($cabecera, $ancho) . "\033[0m" . '│' . PHP_EOL;
+        echo $linea("  Ticket N°: {$numeroTicket}") . PHP_EOL;
+        echo $linea("  Fecha:     " . date('Y-m-d H:i:s')) . PHP_EOL;
         echo "  ├{$borde}┤" . PHP_EOL;
 
-        // Ítems del ticket.
+        // Cabecera de columnas: bold aplicado fuera del sprintf.
+        $cabecera = sprintf($formatoCabecera, 'PRODUCTO', 'P.UNIT', 'QTY', 'SUBTOTAL');
+        echo '  │' . "\033[1m" . $cabecera . "\033[0m" . '│' . PHP_EOL;
+        echo "  ├{$borde}┤" . PHP_EOL;
+
+        // Filas de ítems — cada columna se pad con mb_str_pad para manejar tildes.
         foreach ($agrupados as $grupo) {
             $item     = $grupo['item'];
             $cantidad = $grupo['cantidad'];
             $subtotal = $item->calcularPrecioFinal() * $cantidad;
 
-            // Truncar nombre si es demasiado largo.
-            $nombre = mb_strlen($item->getNombre()) > 28
-                ? mb_substr($item->getNombre(), 0, 25) . '...'
+            // Truncar nombre a 26 chars visibles.
+            $nombre = mb_strlen($item->getNombre()) > 26
+                ? mb_substr($item->getNombre(), 0, 23) . '...'
                 : $item->getNombre();
 
-            $fila = sprintf(
-                '  %-28s %8s x%-2d %8s',
-                $nombre,
-                '$' . number_format($item->calcularPrecioFinal(), 2),
-                $cantidad,
-                '$' . number_format($subtotal, 2)
-            );
+            // Construir columnas con mb_str_pad para respetar ancho visual.
+            // Total: 2(margen) + 26(nombre) + 1(sep) + 8(precio) + 2(xQ) + 2(qty) + 1(sep) + 9(sub) = 51
+            $colNombre   = mb_str_pad($nombre, 26);
+            $colPrecio   = str_pad('$' . number_format($item->calcularPrecioFinal(), 2), 8, ' ', STR_PAD_LEFT);
+            $colCantidad = str_pad((string)$cantidad, 2);
+            $colSubtotal = str_pad('$' . number_format($subtotal, 2), 9, ' ', STR_PAD_LEFT);
 
-            echo '  ' . $linea($fila) . PHP_EOL;
+            $fila = "  {$colNombre} {$colPrecio} x{$colCantidad} {$colSubtotal}";
+
+            echo $linea($fila) . PHP_EOL;
         }
 
-        echo "  ├{$borde}┤" . PHP_EOL;
-
-        // Total.
-        $totalStr = '$' . number_format($this->calcularTotal(), 2);
-        $filaTotal = sprintf('  %-38s %10s', "\033[1mTOTAL A PAGAR:\033[0m", "\033[1;32m{$totalStr}\033[0m");
-        echo '  │' . $filaTotal . str_repeat(' ', max(0, $ancho - 49)) . '│' . PHP_EOL;
 
         echo "  ├{$borde}┤" . PHP_EOL;
-        echo '  │' . $centrar('¡Gracias por su compra!') . '│' . PHP_EOL;
-        echo '  │' . $centrar('Conserve este ticket como comprobante.') . '│' . PHP_EOL;
+
+        // Fila de total: construir SIN ANSI para que str_pad cuente bien,
+        // luego aplicar color a la línea completa.
+        $labelTotal = 'TOTAL A PAGAR:';
+        $valorTotal = '$' . number_format($this->calcularTotal(), 2);
+        $espacios   = $ancho - 2 - strlen($labelTotal) - strlen($valorTotal);
+        $rawTotal   = '  ' . $labelTotal . str_repeat(' ', max(1, $espacios)) . $valorTotal;
+        echo '  │' . "\033[1;32m" . str_pad($rawTotal, $ancho) . "\033[0m" . '│' . PHP_EOL;
+
+        echo "  ├{$borde}┤" . PHP_EOL;
+        echo $linea($centrar('¡Gracias por su compra!')) . PHP_EOL;
+        echo $linea($centrar('Conserve este ticket como comprobante.')) . PHP_EOL;
         echo "  └{$borde}┘" . PHP_EOL . PHP_EOL;
     }
 

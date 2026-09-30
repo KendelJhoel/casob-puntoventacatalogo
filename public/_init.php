@@ -11,7 +11,7 @@ session_start();
 
 function e(mixed $valor): string
 {
-    return htmlspecialchars((string) $valor, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); // [SEGURIDAD]
+    return htmlspecialchars(is_scalar($valor) ? (string) $valor : '', ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); // [SEGURIDAD]
 }
 
 function csrf(): string

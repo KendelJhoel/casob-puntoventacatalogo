@@ -1,5 +1,6 @@
 :root{color-scheme:light;--ink:#182434;--muted:#627084;--paper:#f5f4ef;--card:#fff;--line:#e1e5e7;--accent:#315f58;--accent-dark:#244942;--warm:#d6b779;--danger:#a93b36;--radius:16px;font-family:system-ui,-apple-system,"Segoe UI",sans-serif}
 *{box-sizing:border-box}
+[hidden]{display:none!important}
 body{margin:0;background:var(--paper);color:var(--ink);line-height:1.5}
 a{color:inherit}
 button,input,select{font:inherit}

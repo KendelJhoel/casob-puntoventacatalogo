@@ -55,7 +55,7 @@ class Servicio extends ItemVendible
      */
     public function calcularPrecioFinal(): float
     {
-        return $this->precioBase + self::TARIFA_AGENDAMIENTO;
+        return round($this->precioBase + self::TARIFA_AGENDAMIENTO, 2);
     }
 
     public function obtenerDetalle(): string

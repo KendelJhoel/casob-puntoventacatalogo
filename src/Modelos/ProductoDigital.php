@@ -57,7 +57,7 @@ class ProductoDigital extends ItemVendible
      */
     public function calcularPrecioFinal(): float
     {
-        return $this->precioBase * (1 - self::DESCUENTO);
+        return round($this->precioBase * (1 - self::DESCUENTO), 2);
     }
 
     public function obtenerDetalle(): string

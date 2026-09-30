@@ -31,13 +31,13 @@ final class ItemFactory
         };
     }
 
-    /** @return array{campo:string,etiqueta:string,tipo:string} */
+    /** @return array{campo:string,etiqueta:string,tipo:string,restricciones:string} */
     public static function campoPropio(string $tipo): array
     {
         return match ($tipo) {
-            'fisico' => ['campo' => 'stock', 'etiqueta' => 'Existencias', 'tipo' => 'number'],
-            'digital' => ['campo' => 'enlace_descarga', 'etiqueta' => 'Enlace de descarga', 'tipo' => 'url'],
-            'servicio' => ['campo' => 'fecha_agenda', 'etiqueta' => 'Fecha y hora', 'tipo' => 'datetime-local'],
+            'fisico' => ['campo' => 'stock', 'etiqueta' => 'Existencias', 'tipo' => 'number', 'restricciones' => 'min="0" step="1"'],
+            'digital' => ['campo' => 'enlace_descarga', 'etiqueta' => 'Enlace de descarga', 'tipo' => 'url', 'restricciones' => 'maxlength="2048"'],
+            'servicio' => ['campo' => 'fecha_agenda', 'etiqueta' => 'Fecha y hora', 'tipo' => 'datetime-local', 'restricciones' => ''],
             default => throw new InvalidArgumentException('Tipo de ítem desconocido.'),
         };
     }

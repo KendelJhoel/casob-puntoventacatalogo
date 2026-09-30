@@ -94,7 +94,7 @@ class ProductoFisico extends ItemVendible
      */
     public function calcularPrecioFinal(): float
     {
-        return $this->precioBase * (1 + self::TASA_IMPUESTO_ENVIO);
+        return round($this->precioBase * (1 + self::TASA_IMPUESTO_ENVIO), 2);
     }
 
     public function obtenerDetalle(): string

@@ -29,7 +29,7 @@ comprobar(isset(Validador::item([...$base, 'tipo' => 'digital', 'enlace_descarga
 comprobar(!Validador::fechaValida('2026-02-30 10:00'), 'Fecha inexistente aceptada.');
 
 $fisico = ItemFactory::crear($base);
-comprobar($fisico instanceof ProductoFisico && abs($fisico->calcularPrecioFinal() - 12.075) < 0.00001, 'La fábrica o el precio físico falló.');
+comprobar($fisico instanceof ProductoFisico && $fisico->calcularPrecioFinal() === 12.08, 'La fábrica o el precio físico falló.');
 $fisico->reservar(1);
 comprobar($fisico->getStock() === 1, 'No bajó el stock.');
 try {

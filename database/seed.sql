@@ -1,3 +1,4 @@
+SET NAMES utf8mb4;
 USE casob_puntoventa;
 
 INSERT INTO items (sku, tipo, nombre, precio_base, stock, enlace_descarga, fecha_agenda) VALUES

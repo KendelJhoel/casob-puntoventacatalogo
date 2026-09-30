@@ -1,6 +1,6 @@
 # Plan y bitácora de la Fase 2 — Caso B: punto de venta
 
-**Fuente:** `C:\Users\user\Desktop\Proyecto_Fase2_Aplicacion_Web_PHP.pdf` (18 páginas). **Línea base:** al iniciar, `main`, `ken`, `Miguel`, `Diego` y `Rodolfo` apuntaban a `46021cf`. **Estado actual:** Miguel completó su parte de persistencia y modelo; Diego no ha comenzado. Este documento reúne el plan y el registro de ejecución; **Pendiente** no significa realizado.
+**Fuente:** `C:\Users\user\Desktop\Proyecto_Fase2_Aplicacion_Web_PHP.pdf` (18 páginas). **Línea base:** al iniciar, `main`, `ken`, `Miguel`, `Diego` y `Rodolfo` apuntaban a `46021cf`. **Estado actual:** Miguel completó persistencia y modelo; Diego completó la interfaz y el CRUD web del catálogo. `main` aún apunta a Fase 1. Este documento reúne el plan y el registro de ejecución; **Pendiente** no significa realizado.
 
 | Fase de trabajo | Fecha local (Guatemala) | Rama y responsable previsto | Commits de trabajo | Resultado que debe quedar funcionando |
 | --- | --- | --- | ---: | --- |
@@ -26,12 +26,12 @@ Este archivo se crea **sin commit** mientras solo es un plan. Versionarlo junto 
 | 2 | `Miguel` | `feat: La base ya arranca con ejemplos de cada tipo` | `database/seed.sql` con mínimo tres físicos, tres digitales y tres servicios; conexión PDO inyectable, `config/config.example.php`, `.gitignore` para configuración real, `vendor/` y subidas. Importar los dos SQL y consultar los nueve ítems sin problemas de UTF-8. | **Hecho** · hash: 9424127 · prueba: nueve semillas y PDO |
 | 3 | `Miguel` | `feat: El catálogo recupera las clases originales al leer la base` | Reutilizar `ItemVendible`, `ProductoFisico`, `ProductoDigital` y `Servicio`; adaptar identidad/imagen sin romper `main.php`. Fábrica única para convertir fila y formulario en subclase; el formulario obtiene metadatos de campos propios sin decidir el tipo en la vista. Precios y detalles siguen siendo polimórficos. Revisar los `instanceof` heredados de `app.php` y `Carrito.php` para que listados/cálculos cumplan la regla sin romper la consola. Marcar `[ABSTRACCION]`, `[HERENCIA]`, `[POLIMORFISMO]`, `[INTERFAZ]` y `[FABRICA]` donde correspondan. | **Hecho** · hash: 06009aa · prueba: `php main.php` y sintaxis |
 | 4 | `Miguel` | `feat: Ya podemos guardar y consultar productos en MySQL` | Repositorio con PDO por constructor y consultas preparadas para crear, listar, buscar, actualizar y eliminar ítems. Ninguna página escribe SQL. Comprobar las cuatro operaciones con datos reales y que borrar un ítem no destruya tickets históricos. Marcar `[CRUD-CREATE]`, `[CRUD-READ]`, `[CRUD-UPDATE]`, `[CRUD-DELETE]`, `[SEGURIDAD]` y `[INYECCION-DEPENDENCIAS]`. | **Hecho** · hash: f00fcba · prueba: CRUD e historial en MySQL |
-| 5 | `Miguel` | `feat: La validación del catálogo rechaza productos incorrectos` | Clase `Validador` con todos los errores por campo; reglas de precio > 0, stock físico entero ≥ 0, URL digital válida, nombre/SKU y fecha de servicio válidos. Reforzar invariantes en las clases y SQL; prueba pequeña que rechace datos incorrectos aun sin HTML5. Marcar `[VALIDACION]` y `[ENCAPSULAMIENTO]`. | **Hecho** · hash: último commit de `Miguel` · prueba: `php tests/check_miguel.php` |
-| 6 | `Diego` | `feat: Armé el inicio y el diseño de la web` | `public/` como raíz, layout compartido con `header/nav/main/footer`, inicio con resumen real y accesos, una sola hoja CSS propia con variables, Grid/Flexbox y media query ≤ 768 px. Arranque común, escape `htmlspecialchars()`, sesión, token CSRF, flash y redirección PRG reutilizables. Marcar `[SEGURIDAD]` y `[PRG]`. | **Pendiente** · hash: — · prueba: — |
-| 7 | `Diego` | `feat: El catálogo ya se puede recorrer desde el navegador` | Listado con miniatura, dato calculado polimórficamente, acciones y estado vacío; ficha completa con imagen y detalle del objeto. HTML5 semántico, `label` y `alt` donde corresponda, salida escapada, sin `instanceof` ni condicionales por tipo en vistas. Probar escritorio y móvil. | **Pendiente** · hash: — · prueba: — |
-| 8 | `Diego` | `feat: Las imágenes ya se guardan sin confiar en su nombre` | `GestorImagenes`: error de subida, máximo 2 MB, MIME real JPG/PNG/WEBP con `finfo`, nombre aleatorio, `move_uploaded_file()`, imagen por defecto, reemplazo y eliminación. Evitar archivos huérfanos si falla la base. Probar archivo válido, MIME falso y tamaño excesivo. Marcar `[VALIDACION]` y `[SEGURIDAD]`. | **Pendiente** · hash: — · prueba: — |
-| 9 | `Diego` | `feat: Ya se pueden registrar productos del catálogo desde la web` | Formulario para los tres tipos, imagen obligatoria al registrar, atributos HTML5 y validación PHP, errores al lado del campo y valores conservados. Guardar por POST preparado, verificar CSRF, mostrar flash y aplicar PRG. Crear un ítem de cada tipo en MySQL. | **Pendiente** · hash: — · prueba: — |
-| 10 | `Diego` | `feat: El catálogo ya permite editar y eliminar productos` | Formulario precargado con imagen actual y reemplazo; confirmación de eliminación por POST, nunca por enlace GET. Validación, CSRF, flash, PRG, limpieza de imágenes y preservación del historial de ventas. Probar editar, reemplazar, borrar y recargar sin duplicar. | **Pendiente** · hash: — · prueba: — |
+| 5 | `Miguel` | `feat: La validación del catálogo rechaza productos incorrectos` | Clase `Validador` con todos los errores por campo; reglas de precio > 0, stock físico entero ≥ 0, URL digital válida, nombre/SKU y fecha de servicio válidos. Reforzar invariantes en las clases y SQL; prueba pequeña que rechace datos incorrectos aun sin HTML5. Marcar `[VALIDACION]` y `[ENCAPSULAMIENTO]`. | **Hecho** · hash: `dd8e70c` · prueba: `php tests/check_miguel.php` |
+| 6 | `Diego` | `feat: Armé el inicio y el diseño de la web` | `public/` como raíz, layout compartido con `header/nav/main/footer`, inicio con resumen real y accesos, una sola hoja CSS propia con variables, Grid/Flexbox y media query ≤ 768 px. Arranque común, escape `htmlspecialchars()`, sesión, token CSRF, flash y redirección PRG reutilizables. Marcar `[SEGURIDAD]` y `[PRG]`. | **Hecho** · hash: `4f283e2` · prueba: PHP y HTTP 200 |
+| 7 | `Diego` | `feat: El catálogo ya se puede recorrer desde el navegador` | Listado con miniatura, dato calculado polimórficamente, acciones y estado vacío; ficha completa con imagen y detalle del objeto. HTML5 semántico, `label` y `alt` donde corresponda, salida escapada, sin `instanceof` ni condicionales por tipo en vistas. Probar escritorio y móvil. | **Hecho** · hash: `09c0868` · prueba: catálogo/ficha en escritorio y móvil |
+| 8 | `Diego` | `feat: Las imágenes ya se guardan sin confiar en su nombre` | `GestorImagenes`: error de subida, máximo 2 MB, MIME real JPG/PNG/WEBP con `finfo`, nombre aleatorio, `move_uploaded_file()`, imagen por defecto, reemplazo y eliminación. Evitar archivos huérfanos si falla la base. Probar archivo válido, MIME falso y tamaño excesivo. Marcar `[VALIDACION]` y `[SEGURIDAD]`. | **Hecho** · hash: `807890c` · prueba: MIME falso, PNG y límite 2 MB |
+| 9 | `Diego` | `feat: Ya se pueden registrar productos del catálogo desde la web` | Formulario para los tres tipos, imagen obligatoria al registrar, atributos HTML5 y validación PHP, errores al lado del campo y valores conservados. Guardar por POST preparado, verificar CSRF, mostrar flash y aplicar PRG. Crear un ítem de cada tipo en MySQL. | **Hecho** · hash: `2d621c6` · prueba: altas de tres tipos, 422 y 403 |
+| 10 | `Diego` | `feat: El catálogo ya permite editar y eliminar productos` | Formulario precargado con imagen actual y reemplazo; confirmación de eliminación por POST, nunca por enlace GET. Validación, CSRF, flash, PRG, limpieza de imágenes y preservación del historial de ventas. Probar editar, reemplazar, borrar y recargar sin duplicar. | **Hecho** · hash: último commit de `Diego` · prueba: edición, reemplazo, borrado y ticket |
 
 **Cierre obligatorio de fase 1:** ejecutar instalación limpia; comprobar inicio, listado, crear, editar, ficha y confirmación; usar `novalidate` para probar PHP; verificar imágenes y SQL. Registrar en la bitácora por qué se eligió tabla única, la relación clase↔tabla y la tabla de validaciones: Rodolfo necesitará esos datos para el informe. Si cualquiera falla, la fase sigue **En curso**, aunque ya existan diez commits.
 
@@ -71,13 +71,13 @@ Marcar solo tras comprobar, no por existir un archivo.
 
 | Requisito | Commits previstos | Estado / evidencia |
 | --- | --- | --- |
-| Mismo repositorio y consola de Fase 1 conservada | 3, 15 | ☐ Pendiente |
-| MySQL/MariaDB: jerarquía, ventas/detalle, FK, restricciones, `schema.sql` y `seed.sql` con tres por tipo | 1, 2 | ☐ Pendiente |
-| Repositorios PDO preparados, fábrica única y polimorfismo sin decisiones por tipo en vistas | 3, 4, 11, 14 | ☐ Pendiente |
-| CRUD completo del catálogo y alta/listado de ventas | 4, 7, 9–13 | ☐ Pendiente |
-| Ocho páginas HTML5, layout común, CSS propio y diseño móvil | 6, 7, 9, 10, 12–14, 18 | ☐ Pendiente |
-| Formularios: HTML5 y PHP, errores por campo, valores conservados, PRG, flash, CSRF y borrado POST | 5, 6, 9, 10, 12, 15, 17 | ☐ Pendiente |
-| Imágenes: MIME, 2 MB, nombre único, reemplazo, eliminación e imagen por defecto | 8–10, 17 | ☐ Pendiente |
+| Mismo repositorio y consola de Fase 1 conservada | 3, 15 | ☑ Consola probada; repetir al cierre |
+| MySQL/MariaDB: jerarquía, ventas/detalle, FK, restricciones, `schema.sql` y `seed.sql` con tres por tipo | 1, 2 | ☑ Importación MySQL 8 y UTF-8 comprobados |
+| Repositorios PDO preparados, fábrica única y polimorfismo sin decisiones por tipo en vistas | 3, 4, 11, 14 | ◐ Catálogo hecho; ventas/reporte pendientes |
+| CRUD completo del catálogo y alta/listado de ventas | 4, 7, 9–13 | ◐ Catálogo completo; ventas pendientes |
+| Ocho páginas HTML5, layout común, CSS propio y diseño móvil | 6, 7, 9, 10, 12–14, 18 | ◐ Seis páginas del catálogo; faltan ventas y reporte |
+| Formularios: HTML5 y PHP, errores por campo, valores conservados, PRG, flash, CSRF y borrado POST | 5, 6, 9, 10, 12, 15, 17 | ◐ Catálogo probado; falta repetir en ventas |
+| Imágenes: MIME, 2 MB, nombre único, reemplazo, eliminación e imagen por defecto | 8–10, 17 | ☑ Pruebas de subida, reemplazo y borrado |
 | Venta transaccional y sin sobreventa; ticket/reporte desde DB | 11–15 | ☐ Pendiente |
 | Escape de salida, secretos fuera de Git, sin frameworks PHP/CSS y etiquetas `[CONCEPTO]` completas y correctas | 2–17 | ☐ Pendiente |
 | README reproducible, capturas, informe PDF completo, 20 commits reales y `v2.0` | 16–20 y revisión Git | ☐ Pendiente |
@@ -92,15 +92,33 @@ Actualizar después de **cada** commit y al cerrar cada fase. Anotar hechos, no 
 | 29/09 22:45 | 1 · #2 | `Miguel` | Miguel | `9424127` | Tres semillas por tipo y PDO | No |
 | 29/09 22:46 | 1 · #3 | `Miguel` | Miguel | `06009aa` | Consola y sintaxis PHP | No |
 | 29/09 22:46 | 1 · #4 | `Miguel` | Miguel | `f00fcba` | CRUD e historial en MySQL | No |
-| 29/09 22:51 | 1 · #5 | `Miguel` | Miguel | Último commit de `Miguel` | Modelo, validador y CRUD | No |
+| 29/09 22:51 | 1 · #5 | `Miguel` | Miguel | `dd8e70c` | Modelo, validador y CRUD | No |
+| 29/09 23:06 | 1 · #6 | `Diego` | Diego | `4f283e2` | Inicio, sesión, CSS y sintaxis | No |
+| 29/09 23:08 | 1 · #7 | `Diego` | Diego | `09c0868` | Catálogo y ficha HTTP 200 | No |
+| 29/09 23:10 | 1 · #8 | `Diego` | Diego | `807890c` | MIME falso, PNG y 2 MB | No |
+| 29/09 23:21 | 1 · #9 | `Diego` | Diego | `2d621c6` | Tres altas web, 422/403 y redondeo | No |
+| 29/09 23:42 | 1 · #10 | `Diego` | Diego | Último commit de `Diego` | Editar, reemplazar, borrar e historial | No |
 
-**Fase 1:** En curso: Miguel 5/5; Diego pendiente por indicación del usuario. MySQL 8, semillas, CRUD, historial y consola probados.
+**Fase 1:** Funciones previstas implementadas y probadas: Miguel 5/5, Diego 5/5. Pendiente confirmar push de Diego e integrar en `main` antes de Fase 2.
 **Fase 2:** Pendiente. Resultado de pruebas y bloqueos: —
 **Fase 3:** Pendiente. Resultado de pruebas y bloqueos: —
 **Entrega:** `main`: — · etiqueta `v2.0`: — · informe PDF: — · URL pública: —
 
 ## Estado para retomar el trabajo
 
-En `Miguel` están `database/schema.sql`, `database/seed.sql`, la conexión PDO, la fábrica, el repositorio de ítems y la validación. `tests/check_miguel.php` comprueba el modelo y, si existe `config/config.php`, también el CRUD y el historial en MySQL. La configuración real está ignorada por Git: copiar `config/config.example.php` y ajustar los datos locales. Importar primero el esquema y después las semillas. El test de base necesita esas nueve filas.
+En `Miguel` están `database/schema.sql`, `database/seed.sql`, la conexión PDO, la fábrica, el repositorio de ítems y la validación. `Diego` avanzó por fast-forward desde `Miguel` y añadió `public/` con inicio, catálogo, ficha, alta, edición, confirmación de borrado, CSS, JavaScript del formulario y gestión de imágenes. Hay cinco commits nuevos de cada uno en la historia de `Diego`. La configuración real está ignorada por Git: copiar `config/config.example.php` a `config/config.php` y ajustar los datos locales. Importar primero el esquema y después las semillas; ambos archivos fijan `utf8mb4` para evitar acentos corruptos.
 
-Diego debe partir del código de `Miguel` cuando el usuario indique iniciar su trabajo; **no hay commits de Diego todavía**. `main` sigue en la Fase 1 original hasta que se cierre la fase. Antes de los commits de otro integrante, cambiar `user.name` y `user.email` locales para que la autoría no herede la configuración de Miguel.
+Pruebas para retomar: `composer install`, `php tests/check_miguel.php`, `php tests/check_images.php`, `php -S localhost:8000 -t public`. El test de base necesita las nueve semillas. Con MySQL 8 se comprobaron las seis páginas, creación de los tres tipos, validación 422, CSRF 403, PRG 303, edición sin nueva foto, reemplazo y limpieza de la anterior, borrado solo por POST, escape de HTML y conservación de una venta anterior al borrado. El navegador confirmó catálogo y formulario a 390 px y escritorio. Las imágenes reales quedan en `public/uploads/` (ignoradas por Git); los productos de las semillas muestran `public/assets/sin-imagen.svg`.
+
+La decisión de mapeo es **una tabla `items` para la jerarquía**: `ItemVendible` es abstracta, `ProductoFisico`, `ProductoDigital` y `Servicio` comparten SKU/nombre/precio/imagen y usan `tipo` más sus columnas propias. `ItemFactory` reconstruye la subclase al leer la fila. `ventas` y `venta_detalles` son tablas aparte; el detalle copia SKU, nombre y precio para preservar tickets aunque se borre el ítem (`item_id` queda nulo). Esto debe pasar al diagrama y la justificación del informe.
+
+| Campo | Navegador HTML5 | Servidor PHP | Base/modelo |
+| --- | --- | --- | --- |
+| SKU, nombre | `required`, longitud y patrón | longitud, formato, vacío | `UNIQUE`, `NOT NULL`, nombre no vacío, invariantes de clase |
+| Precio | `number`, mínimo y paso | positivo, dos decimales | `DECIMAL`, `CHECK`, clase |
+| Stock físico | `number`, entero no negativo | entero ≥ 0 | `CHECK`, encapsulación |
+| Enlace digital | `url`, longitud | URL HTTP(S) | clase y restricción de tipo |
+| Fecha servicio | `datetime-local` | fecha y hora reales | `DATETIME`, clase |
+| Imagen | `accept`, obligatoria al crear | MIME real, imagen legible, 2 MB | nombre aleatorio y ruta almacenada |
+
+Antes de los commits de Kendel, cambiar `user.name` y `user.email` locales: la configuración actual corresponde a Diego. La rama `ken` y `main` aún no incluyen estos cambios; el siguiente responsable debe incorporarlos de forma explícita.

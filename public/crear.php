@@ -47,6 +47,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 $accion = 'crear.php';
 $textoBoton = 'Guardar ítem';
 $imagenActual = null;
+$imagenObligatoria = true;
 encabezado('Nuevo ítem');
 ?>
 <div class="page-top"><div><p class="eyebrow">Catálogo</p><h1>Nuevo ítem</h1><p>Completa los datos y elige una imagen para publicar el ítem.</p></div></div>

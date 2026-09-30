@@ -25,7 +25,7 @@ encabezado('Catálogo');
                     <h3><?= e($item->getNombre()) ?></h3>
                     <p><?= e($item->getId()) ?><?= e($item->getInfoCatalogo()) ?></p>
                     <span class="price">$<?= number_format($item->calcularPrecioFinal(), 2) ?></span>
-                    <div class="card-actions"><a class="text-link" href="detalle.php?id=<?= (int) $item->getDatabaseId() ?>">Ver detalle <span aria-hidden="true">→</span></a></div>
+                    <div class="card-actions"><a class="text-link" href="detalle.php?id=<?= (int) $item->getDatabaseId() ?>">Ver detalle <span aria-hidden="true">→</span></a><a class="text-link" href="editar.php?id=<?= (int) $item->getDatabaseId() ?>">Editar</a></div>
                 </div>
             </article>
         <?php endforeach; ?>

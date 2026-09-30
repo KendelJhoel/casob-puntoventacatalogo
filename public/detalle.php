@@ -32,6 +32,7 @@ encabezado($item->getNombre());
             <dt><?= e($campo['etiqueta']) ?></dt><dd><?= e($valor) ?></dd>
             <dt>Detalle</dt><dd><?= e($item->obtenerDetalle()) ?></dd>
         </dl>
+        <div class="detail-actions"><a class="button" href="editar.php?id=<?= (int) $item->getDatabaseId() ?>">Editar ítem</a><a class="button button-ghost" href="eliminar.php?id=<?= (int) $item->getDatabaseId() ?>">Eliminar</a></div>
     </div>
 </article>
 <?php pie(); ?>

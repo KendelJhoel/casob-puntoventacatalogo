@@ -1,4 +1,5 @@
 -- Caso B: una tabla para la jerarquía de ítems y dos para las ventas.
+SET NAMES utf8mb4;
 CREATE DATABASE IF NOT EXISTS casob_puntoventa CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 USE casob_puntoventa;
 

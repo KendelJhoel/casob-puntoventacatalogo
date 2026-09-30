@@ -7,6 +7,7 @@ declare(strict_types=1);
 /** @var string $accion */
 /** @var string $textoBoton */
 /** @var ?string $imagenActual */
+/** @var bool $imagenObligatoria */
 
 $tipos = ['fisico' => 'Producto físico', 'digital' => 'Producto digital', 'servicio' => 'Servicio'];
 ?>
@@ -51,9 +52,9 @@ $tipos = ['fisico' => 'Producto físico', 'digital' => 'Producto digital', 'serv
             </div>
         <?php endforeach; ?>
         <div class="field field-full">
-            <label for="imagen">Imagen <?= $imagenActual ? '(opcional si mantienes la actual)' : '(obligatoria)' ?></label>
+            <label for="imagen">Imagen <?= $imagenObligatoria ? '(obligatoria)' : '(opcional)' ?></label>
             <?php if ($imagenActual): ?><img class="preview" src="<?= e(rutaImagen($imagenActual)) ?>" alt="Imagen actual del ítem"><?php endif; ?>
-            <input id="imagen" name="imagen" type="file" accept="image/jpeg,image/png,image/webp" <?= $imagenActual ? '' : 'required' ?> aria-invalid="<?= isset($errores['imagen']) ? 'true' : 'false' ?>">
+            <input id="imagen" name="imagen" type="file" accept="image/jpeg,image/png,image/webp" <?= $imagenObligatoria ? 'required' : '' ?> aria-invalid="<?= isset($errores['imagen']) ? 'true' : 'false' ?>">
             <small>JPG, PNG o WEBP, hasta 2 MB.</small>
             <?php if (isset($errores['imagen'])): ?><span class="error"><?= e($errores['imagen']) ?></span><?php endif; ?>
         </div>

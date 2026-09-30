@@ -20,9 +20,30 @@ class ProductoDigital extends ItemVendible
         string $id,
         string $nombre,
         float $precioBase,
-        private readonly string $enlaceDescarga
+        private readonly string $enlaceDescarga,
+        ?int $databaseId = null,
+        ?string $imagen = null
     ) {
-        parent::__construct($id, $nombre, $precioBase);
+        parent::__construct($id, $nombre, $precioBase, $databaseId, $imagen);
+        if (strlen($this->enlaceDescarga) > 2048 || !filter_var($this->enlaceDescarga, FILTER_VALIDATE_URL)
+            || !in_array(parse_url($this->enlaceDescarga, PHP_URL_SCHEME), ['http', 'https'], true)) {
+            throw new \InvalidArgumentException('El enlace de descarga debe ser una URL http o https.');
+        }
+    }
+
+    public function getCamposPropios(): array
+    {
+        return ['stock' => null, 'enlace_descarga' => $this->enlaceDescarga, 'fecha_agenda' => null];
+    }
+
+    public function getTipo(): string
+    {
+        return 'digital';
+    }
+
+    public function getEtiquetaTipo(): string
+    {
+        return 'Productos Digitales';
     }
 
     public function getEnlaceDescarga(): string

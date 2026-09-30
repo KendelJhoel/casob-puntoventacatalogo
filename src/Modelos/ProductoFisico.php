@@ -22,9 +22,11 @@ class ProductoFisico extends ItemVendible
         string $id,
         string $nombre,
         float $precioBase,
-        private int $stock
+        private int $stock,
+        ?int $databaseId = null,
+        ?string $imagen = null
     ) {
-        parent::__construct($id, $nombre, $precioBase);
+        parent::__construct($id, $nombre, $precioBase, $databaseId, $imagen);
 
         if ($this->stock < 0) {
             throw new \InvalidArgumentException(
@@ -41,6 +43,36 @@ class ProductoFisico extends ItemVendible
         return $this->stock;
     }
 
+    public function reservar(int $cantidad): void
+    {
+        $this->reducirStock($cantidad);
+    }
+
+    public function getInfoCatalogo(): string
+    {
+        return " (stock: {$this->stock})";
+    }
+
+    public function requiereCantidad(): bool
+    {
+        return true;
+    }
+
+    public function getCamposPropios(): array
+    {
+        return ['stock' => $this->stock, 'enlace_descarga' => null, 'fecha_agenda' => null];
+    }
+
+    public function getTipo(): string
+    {
+        return 'fisico';
+    }
+
+    public function getEtiquetaTipo(): string
+    {
+        return 'Productos Físicos';
+    }
+
     /**
      * Único punto de acceso para reducir el stock.
      * Valida que haya suficientes unidades antes de proceder.
@@ -49,6 +81,7 @@ class ProductoFisico extends ItemVendible
      */
     public function reducirStock(int $cantidad): void
     {
+        parent::reservar($cantidad);
         if ($cantidad > $this->stock) {
             throw new StockInsuficienteException($this->nombre, $this->stock);
         }

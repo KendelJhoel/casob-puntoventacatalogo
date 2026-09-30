@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Servicios;
 
 use App\Contratos\Facturable;
-use App\Modelos\ProductoFisico;
 
 /**
  * Servicio que gestiona el carrito de compras.
@@ -32,17 +31,14 @@ class Carrito
     }
 
     /**
-     * Agrega un ítem al carrito. Si es un ProductoFisico, reduce su stock
-     * en la cantidad indicada (encapsulamiento: la validación ocurre dentro del modelo).
+     * Agrega un ítem al carrito. Cada ítem decide cómo reservar su cantidad.
      *
      * @throws \App\Excepciones\StockInsuficienteException si el stock es insuficiente.
      */
     public function agregarItem(Facturable $item, int $cantidad = 1): void
     {
         // El carrito delega la validación de stock al propio modelo.
-        if ($item instanceof ProductoFisico) {
-            $item->reducirStock($cantidad);
-        }
+        $item->reservar($cantidad);
 
         // Cada unidad se agrega como entrada individual para el ticket.
         for ($i = 0; $i < $cantidad; $i++) {

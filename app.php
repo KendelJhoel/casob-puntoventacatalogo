@@ -85,20 +85,14 @@ function mostrarCatalogo(array $catalogo): void
 
     $tipoActual = '';
     foreach ($catalogo as $num => $item) {
-        $tipo = match(true) {
-            $item instanceof ProductoFisico  => 'Productos Físicos',
-            $item instanceof ProductoDigital => 'Productos Digitales',
-            $item instanceof Servicio        => 'Servicios',
-        };
+        $tipo = $item->getEtiquetaTipo();
 
         if ($tipo !== $tipoActual) {
             echo PHP_EOL . "  \033[1;34m  [{$tipo}]\033[0m" . PHP_EOL;
             $tipoActual = $tipo;
         }
 
-        $stockInfo = $item instanceof ProductoFisico
-            ? " (stock: {$item->getStock()})"
-            : '';
+        $stockInfo = $item->getInfoCatalogo();
 
         echo sprintf(
             "  \033[1m  [%d]\033[0m %-35s \033[0;32m$%.2f final\033[0m%s" . PHP_EOL,
@@ -182,8 +176,8 @@ while (true) {
             $item     = $catalogo[$num];
             $cantidad = 1;
 
-            if ($item instanceof ProductoFisico) {
-                $cantStr = leer("  Cantidad (stock disponible: {$item->getStock()}): ");
+            if ($item->requiereCantidad()) {
+                $cantStr = leer("  Cantidad{$item->getInfoCatalogo()}: ");
                 $cantidad = is_numeric($cantStr) && (int)$cantStr > 0 ? (int)$cantStr : 1;
             }
 

@@ -10,6 +10,9 @@ namespace App\Contratos;
  */
 interface Facturable
 {
+    /** Comprueba la cantidad y reserva existencias si corresponde. */
+    public function reservar(int $cantidad): void;
+
     /**
      * Calcula el precio final del ítem, aplicando impuestos,
      * descuentos o recargos según el tipo de ítem.

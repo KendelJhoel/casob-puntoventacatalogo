@@ -19,9 +19,26 @@ class Servicio extends ItemVendible
         string $id,
         string $nombre,
         float $precioBase,
-        private string $fechaAgenda
+        private string $fechaAgenda,
+        ?int $databaseId = null,
+        ?string $imagen = null
     ) {
-        parent::__construct($id, $nombre, $precioBase);
+        parent::__construct($id, $nombre, $precioBase, $databaseId, $imagen);
+    }
+
+    public function getCamposPropios(): array
+    {
+        return ['stock' => null, 'enlace_descarga' => null, 'fecha_agenda' => $this->fechaAgenda];
+    }
+
+    public function getTipo(): string
+    {
+        return 'servicio';
+    }
+
+    public function getEtiquetaTipo(): string
+    {
+        return 'Servicios';
     }
 
     public function getFechaAgenda(): string

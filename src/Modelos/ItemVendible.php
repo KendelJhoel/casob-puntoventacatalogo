@@ -20,11 +20,20 @@ abstract class ItemVendible implements Facturable
     public function __construct(
         protected readonly string $id,
         protected string $nombre,
-        protected float $precioBase
+        protected float $precioBase,
+        protected readonly ?int $databaseId = null,
+        protected readonly ?string $imagen = null
     ) {
-        if ($this->precioBase < 0) {
+        if (!preg_match('/^[A-Za-z0-9_-]{1,40}$/D', $this->id)) {
+            throw new \InvalidArgumentException('El SKU no es válido.');
+        }
+        if (trim($this->nombre) === '' || mb_strlen($this->nombre) > 150) {
+            throw new \InvalidArgumentException('El nombre debe tener entre 1 y 150 caracteres.');
+        }
+        if (!is_finite($this->precioBase) || $this->precioBase <= 0
+            || $this->precioBase > 99999999.99 || round($this->precioBase, 2) !== $this->precioBase) {
             throw new \InvalidArgumentException(
-                "El precio base de '{$this->nombre}' no puede ser negativo."
+                "El precio base de '{$this->nombre}' debe ser positivo y tener máximo dos decimales."
             );
         }
     }
@@ -43,6 +52,40 @@ abstract class ItemVendible implements Facturable
     {
         return $this->precioBase;
     }
+
+    public function getDatabaseId(): ?int
+    {
+        return $this->databaseId;
+    }
+
+    public function getImagen(): ?string
+    {
+        return $this->imagen;
+    }
+
+    public function reservar(int $cantidad): void
+    {
+        if ($cantidad < 1) {
+            throw new \InvalidArgumentException('La cantidad debe ser mayor que cero.');
+        }
+    }
+
+    public function getInfoCatalogo(): string
+    {
+        return '';
+    }
+
+    public function requiereCantidad(): bool
+    {
+        return false;
+    }
+
+    /** @return array{stock:?int,enlace_descarga:?string,fecha_agenda:?string} */
+    abstract public function getCamposPropios(): array;
+
+    abstract public function getTipo(): string;
+
+    abstract public function getEtiquetaTipo(): string;
 
     /**
      * Cada subclase define su propio cálculo de precio final (polimorfismo).

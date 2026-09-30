@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="640" height="480" viewBox="0 0 640 480" role="img" aria-labelledby="titulo">
+  <title id="titulo">Sin imagen</title>
+  <rect width="640" height="480" fill="#e8eee9"/>
+  <rect x="183" y="115" width="274" height="220" rx="24" fill="none" stroke="#88a29a" stroke-width="12"/>
+  <circle cx="263" cy="188" r="24" fill="#b0c4b8"/>
+  <path d="M200 306l86-88 65 57 43-40 46 71" fill="none" stroke="#88a29a" stroke-width="12" stroke-linecap="round" stroke-linejoin="round"/>
+  <text x="320" y="386" text-anchor="middle" fill="#537469" font-family="system-ui,sans-serif" font-size="24">Imagen pendiente</text>
+</svg>

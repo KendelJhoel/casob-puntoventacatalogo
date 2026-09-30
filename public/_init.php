@@ -38,6 +38,11 @@ function redirigir(string $ruta): never
     exit;
 }
 
+function rutaImagen(?string $nombre): string
+{
+    return $nombre ? 'uploads/' . rawurlencode($nombre) : 'assets/sin-imagen.svg';
+}
+
 $configPath = __DIR__ . '/../config/config.php';
 if (!is_file($configPath)) {
     http_response_code(503);

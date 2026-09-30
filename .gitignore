@@ -4,3 +4,5 @@ composer.lock
 .idea/
 .vscode/
 tickets/*.json
+/config/config.php
+/public/uploads/

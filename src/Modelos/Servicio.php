@@ -24,6 +24,9 @@ class Servicio extends ItemVendible
         ?string $imagen = null
     ) {
         parent::__construct($id, $nombre, $precioBase, $databaseId, $imagen);
+        if (!\App\Servicios\Validador::fechaValida($this->fechaAgenda)) {
+            throw new \InvalidArgumentException('La fecha del servicio no es válida.');
+        }
     }
 
     public function getCamposPropios(): array

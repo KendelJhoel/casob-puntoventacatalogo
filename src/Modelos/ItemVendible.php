@@ -7,7 +7,7 @@ namespace App\Modelos;
 use App\Contratos\Facturable;
 
 /**
- * Clase base abstracta para todos los ítems que pueden venderse.
+ * [ABSTRACCION] Clase base abstracta para todos los ítems que pueden venderse.
  * Garantiza un contrato común (Facturable) y encapsula los atributos
  * esenciales de cualquier ítem del catálogo.
  */

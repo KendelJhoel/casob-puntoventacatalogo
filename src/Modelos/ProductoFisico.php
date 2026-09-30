@@ -7,7 +7,7 @@ namespace App\Modelos;
 use App\Excepciones\StockInsuficienteException;
 
 /**
- * Producto con existencia física en bodega.
+ * [HERENCIA] Producto con existencia física en bodega.
  * 
  * - El stock está encapsulado: solo se puede reducir a través de `reducirStock()`,
  *   que lanza una excepción si no hay unidades disponibles.
@@ -89,7 +89,7 @@ class ProductoFisico extends ItemVendible
     }
 
     /**
-     * Precio final = precio base + impuesto de envío (15%).
+     * [POLIMORFISMO] Precio final = precio base + impuesto de envío (15%).
      * Polimorfismo: cada tipo de ítem calcula el precio de forma diferente.
      */
     public function calcularPrecioFinal(): float

@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Contratos;
 
 /**
- * Contrato que deben cumplir todos los ítems vendibles.
+ * [INTERFAZ] Contrato que deben cumplir todos los ítems vendibles.
  * Define el método polimórfico de precio final y el detalle para el ticket.
  */
 interface Facturable

@@ -7,7 +7,7 @@ namespace App\Servicios;
 use App\Contratos\Facturable;
 
 /**
- * Servicio que gestiona el carrito de compras.
+ * [COMPOSICION] Servicio que gestiona el carrito de compras.
  *
  * Acepta cualquier ítem que implemente Facturable, permitiendo
  * totalizar ítems heterogéneos mediante el método común calcularPrecioFinal().

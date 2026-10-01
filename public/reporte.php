@@ -26,7 +26,7 @@ encabezado('Reporte del día');
     <?php if ($reporte['productos'] === []): ?>
         <div class="empty"><p>Todavía no hay ventas en la fecha actual.</p><a class="button" href="venta_nueva.php">Cobrar venta</a></div>
     <?php else: ?>
-        <div class="panel sales-panel"><div class="table-scroll"><table class="data-table">
+        <div class="panel sales-panel report-panel"><div class="table-scroll"><table class="data-table">
             <thead><tr><th scope="col">SKU</th><th scope="col">Nombre al vender</th><th scope="col">Unidades</th><th scope="col">Ingreso</th></tr></thead>
             <tbody><?php foreach ($reporte['productos'] as $fila): ?>
                 <tr><td><?= e($fila['sku']) ?></td><td><?= e($fila['nombre']) ?></td><td><?= (int) $fila['unidades'] ?></td><td>$<?= number_format((float) $fila['importe'], 2) ?></td></tr>

@@ -3,7 +3,8 @@
 declare(strict_types=1);
 
 if (getenv('CASOB_TEST_DB') !== '1') {
-    exit("Configura CASOB_TEST_DB=1 y usa una base de prueba; este script crea una venta.\n");
+    fwrite(STDERR, "Configura CASOB_TEST_DB=1 y usa una base de prueba; este script crea una venta.\n");
+    exit(1);
 }
 
 require __DIR__ . '/../vendor/autoload.php';

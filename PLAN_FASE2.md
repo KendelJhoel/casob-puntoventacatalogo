@@ -1,6 +1,6 @@
 # Plan y bitácora de la Fase 2 — Caso B: punto de venta
 
-**Fuente:** `C:\Users\user\Desktop\Proyecto_Fase2_Aplicacion_Web_PHP.pdf` (18 páginas). **Línea base:** al iniciar, `main`, `ken`, `Miguel`, `Diego` y `Rodolfo` apuntaban a `46021cf`. **Estado actual:** Miguel completó persistencia y modelo; Diego completó la interfaz y el CRUD web del catálogo. `main` aún apunta a Fase 1. Este documento reúne el plan y el registro de ejecución; **Pendiente** no significa realizado.
+**Fuente:** `C:\Users\user\Desktop\Proyecto_Fase2_Aplicacion_Web_PHP.pdf` (18 páginas). **Línea base:** al iniciar, `main`, `ken`, `Miguel`, `Diego` y `Rodolfo` apuntaban a `46021cf`. **Estado actual:** Miguel completó la persistencia, Diego el catálogo web y Kendel las ventas, tickets y el reporte. Las fases 1 y 2 están probadas; falta la fase 3 de Rodolfo. Este documento reúne el plan y el registro de ejecución; **Pendiente** no significa realizado.
 
 | Fase de trabajo | Fecha local (Guatemala) | Rama y responsable previsto | Commits de trabajo | Resultado que debe quedar funcionando |
 | --- | --- | --- | ---: | --- |
@@ -41,11 +41,11 @@ Este archivo se crea **sin commit** mientras solo es un plan. Versionarlo junto 
 
 | # | Rama | Mensaje previsto | Cambio y criterio para darlo por hecho | Estado / hash / prueba |
 | ---: | --- | --- | --- | --- |
-| 11 | `ken` | `feat: El cobro ya guarda la venta y descuenta existencias` | Repositorio de ventas/detalle con PDO preparado y transacción. Validar cantidades positivas, bloquear o actualizar condicionalmente el stock físico, impedir sobreventa y guardar copia del nombre/SKU/precio unitario final en cada línea. Probar rollback y venta de los tres tipos. | **Pendiente** · hash: — · prueba: — |
-| 12 | `ken` | `feat: Ya podemos cobrar ventas desde el navegador` | Formulario POST de venta con cliente, ítems y cantidades; errores visibles, valores conservados, CSRF, flash y PRG. No aceptar venta vacía, cantidad cero ni más stock del disponible. La página no contiene SQL. | **Pendiente** · hash: — · prueba: — |
-| 13 | `ken` | `feat: Ahora se pueden consultar los tickets guardados` | Listado y detalle de ventas con su ticket HTML, fecha, líneas, cantidades y total desde MySQL. Escapar todo dato y usar valores históricos; comprobar que editar/borrar un producto no cambie un ticket emitido. | **Pendiente** · hash: — · prueba: — |
-| 14 | `ken` | `feat: El reporte del día ya sale de ventas reales` | Consultas de reporte en repositorio y página HTML. Repetir el reporte/ticket polimórfico de Fase 1 con métodos de los objetos, sin `instanceof`, `get_class` o decisiones por tipo fuera de la fábrica. Probar con ventas de cada clase. | **Pendiente** · hash: — · prueba: — |
-| 15 | `ken` | `test: Dejé comprobados los flujos de compra en la web` | Una comprobación ejecutable de catálogo, venta, stock insuficiente, persistencia del ticket, CSRF y validación de servidor; ejecutar además `php -l` y navegación real por las ocho páginas. Corregir cualquier fallo antes de cerrar la fase, con commits extra si el arreglo merece uno propio. | **Pendiente** · hash: — · prueba: — |
+| 11 | `ken` | `feat: El cobro ya guarda la venta y descuenta existencias` | Repositorio de ventas/detalle con PDO preparado y transacción. Validar cantidades positivas, bloquear o actualizar condicionalmente el stock físico, impedir sobreventa y guardar copia del nombre/SKU/precio unitario final en cada línea. Probar rollback y venta de los tres tipos. | **Hecho** · `760dc18` · MySQL 8: tres tipos, stock y rollback |
+| 12 | `ken` | `feat: Ya podemos cobrar ventas desde el navegador` | Formulario POST de venta con cliente, ítems y cantidades; errores visibles, valores conservados, CSRF, flash y PRG. No aceptar venta vacía, cantidad cero ni más stock del disponible. La página no contiene SQL. | **Hecho** · `af1f206` · HTTP: 403, 422 y 303 |
+| 13 | `ken` | `feat: Ahora se pueden consultar los tickets guardados` | Listado y detalle de ventas con su ticket HTML, fecha, líneas, cantidades y total desde MySQL. Escapar todo dato y usar valores históricos; comprobar que editar/borrar un producto no cambie un ticket emitido. | **Hecho** · `bc497f8` · historial/ticket HTTP 200 y datos históricos |
+| 14 | `ken` | `feat: El reporte del día ya sale de ventas reales` | Consultas de reporte en repositorio y página HTML. Repetir el reporte/ticket polimórfico de Fase 1 con métodos de los objetos, sin `instanceof`, `get_class` o decisiones por tipo fuera de la fábrica. Probar con ventas de cada clase. | **Hecho** · `d01a996` · reporte de tres tipos, 160.50 dólares |
+| 15 | `ken` | `test: Dejé comprobados los flujos de compra en la web` | Una comprobación ejecutable de catálogo, venta, stock insuficiente, persistencia del ticket, CSRF y validación de servidor; ejecutar además `php -l` y navegación real por las ocho páginas. Corregir cualquier fallo antes de cerrar la fase, con commits extra si el arreglo merece uno propio. | **Hecho** · commit de esta bitácora · suite PHP/HTTP y navegador móvil |
 
 **Cierre obligatorio de fase 2:** las ocho páginas funcionan; CRUD principal y alta/listado de ventas están completos; la venta con stock insuficiente no modifica la DB; el reporte y los tickets leen datos persistidos. Guardar resultados de pruebas y capturas provisionales de venta/reporte para el informe. La fase 3 se dedica a verificar y entregar, no a terminar funciones básicas.
 
@@ -73,13 +73,13 @@ Marcar solo tras comprobar, no por existir un archivo.
 | --- | --- | --- |
 | Mismo repositorio y consola de Fase 1 conservada | 3, 15 | ☑ Consola probada; repetir al cierre |
 | MySQL/MariaDB: jerarquía, ventas/detalle, FK, restricciones, `schema.sql` y `seed.sql` con tres por tipo | 1, 2 | ☑ Importación MySQL 8 y UTF-8 comprobados |
-| Repositorios PDO preparados, fábrica única y polimorfismo sin decisiones por tipo en vistas | 3, 4, 11, 14 | ◐ Catálogo hecho; ventas/reporte pendientes |
-| CRUD completo del catálogo y alta/listado de ventas | 4, 7, 9–13 | ◐ Catálogo completo; ventas pendientes |
-| Ocho páginas HTML5, layout común, CSS propio y diseño móvil | 6, 7, 9, 10, 12–14, 18 | ◐ Seis páginas del catálogo; faltan ventas y reporte |
-| Formularios: HTML5 y PHP, errores por campo, valores conservados, PRG, flash, CSRF y borrado POST | 5, 6, 9, 10, 12, 15, 17 | ◐ Catálogo probado; falta repetir en ventas |
+| Repositorios PDO preparados, fábrica única y polimorfismo sin decisiones por tipo en vistas | 3, 4, 11, 14 | ☑ Catálogo, ventas y reporte probados con MySQL 8 |
+| CRUD completo del catálogo y alta/listado de ventas | 4, 7, 9–13 | ☑ Catálogo y ventas comprobados por HTTP |
+| Ocho páginas HTML5, layout común, CSS propio y diseño móvil | 6, 7, 9, 10, 12–14, 18 | ☑ Nueve rutas principales HTTP 200; formulario, ticket y reporte revisados en móvil. Faltan capturas de entrega |
+| Formularios: HTML5 y PHP, errores por campo, valores conservados, PRG, flash, CSRF y borrado POST | 5, 6, 9, 10, 12, 15, 17 | ☑ Catálogo y venta probados; repetir auditoría final en fase 3 |
 | Imágenes: MIME, 2 MB, nombre único, reemplazo, eliminación e imagen por defecto | 8–10, 17 | ☑ Pruebas de subida, reemplazo y borrado |
-| Venta transaccional y sin sobreventa; ticket/reporte desde DB | 11–15 | ☐ Pendiente |
-| Escape de salida, secretos fuera de Git, sin frameworks PHP/CSS y etiquetas `[CONCEPTO]` completas y correctas | 2–17 | ☐ Pendiente |
+| Venta transaccional y sin sobreventa; ticket/reporte desde DB | 11–15 | ☑ Prueba de tres tipos, rollback, ticket histórico y reporte diario |
+| Escape de salida, secretos fuera de Git, sin frameworks PHP/CSS y etiquetas `[CONCEPTO]` completas y correctas | 2–17 | ◐ Escape y secretos comprobados; falta auditoría final de etiquetas |
 | README reproducible, capturas, informe PDF completo, 20 commits reales y `v2.0` | 16–20 y revisión Git | ☐ Pendiente |
 
 ## Bitácora de ejecución
@@ -88,27 +88,32 @@ Actualizar después de **cada** commit y al cerrar cada fase. Anotar hechos, no 
 
 | Fecha/hora real | Fase y # | Rama | Autor real | Hash / enlace | Prueba pasada y resultado | Integrado en `main` |
 | --- | --- | --- | --- | --- | --- | --- |
-| 29/09 22:37 | 1 · #1 | `Miguel` | Miguel | `d763698` | Esquema importado en MySQL 8 | No |
-| 29/09 22:45 | 1 · #2 | `Miguel` | Miguel | `9424127` | Tres semillas por tipo y PDO | No |
-| 29/09 22:46 | 1 · #3 | `Miguel` | Miguel | `06009aa` | Consola y sintaxis PHP | No |
-| 29/09 22:46 | 1 · #4 | `Miguel` | Miguel | `f00fcba` | CRUD e historial en MySQL | No |
-| 29/09 22:51 | 1 · #5 | `Miguel` | Miguel | `dd8e70c` | Modelo, validador y CRUD | No |
-| 29/09 23:06 | 1 · #6 | `Diego` | Diego | `4f283e2` | Inicio, sesión, CSS y sintaxis | No |
-| 29/09 23:08 | 1 · #7 | `Diego` | Diego | `09c0868` | Catálogo y ficha HTTP 200 | No |
-| 29/09 23:10 | 1 · #8 | `Diego` | Diego | `807890c` | MIME falso, PNG y 2 MB | No |
-| 29/09 23:21 | 1 · #9 | `Diego` | Diego | `2d621c6` | Tres altas web, 422/403 y redondeo | No |
-| 29/09 23:42 | 1 · #10 | `Diego` | Diego | Último commit de `Diego` | Editar, reemplazar, borrar e historial | No |
+| 29/09 22:37 | 1 · #1 | `Miguel` | Miguel | `d763698` | Esquema importado en MySQL 8 | Sí |
+| 29/09 22:45 | 1 · #2 | `Miguel` | Miguel | `9424127` | Tres semillas por tipo y PDO | Sí |
+| 29/09 22:46 | 1 · #3 | `Miguel` | Miguel | `06009aa` | Consola y sintaxis PHP | Sí |
+| 29/09 22:46 | 1 · #4 | `Miguel` | Miguel | `f00fcba` | CRUD e historial en MySQL | Sí |
+| 29/09 22:51 | 1 · #5 | `Miguel` | Miguel | `dd8e70c` | Modelo, validador y CRUD | Sí |
+| 29/09 23:06 | 1 · #6 | `Diego` | Diego | `4f283e2` | Inicio, sesión, CSS y sintaxis | Sí |
+| 29/09 23:08 | 1 · #7 | `Diego` | Diego | `09c0868` | Catálogo y ficha HTTP 200 | Sí |
+| 29/09 23:10 | 1 · #8 | `Diego` | Diego | `807890c` | MIME falso, PNG y 2 MB | Sí |
+| 29/09 23:21 | 1 · #9 | `Diego` | Diego | `2d621c6` | Tres altas web, 422/403 y redondeo | Sí |
+| 29/09 23:42 | 1 · #10 | `Diego` | Diego | `6677173` | Editar, reemplazar, borrar e historial | Sí |
+| 30/09 19:51 | 2 · #11 | `ken` | Kendel | `760dc18` | Tres tipos, precio, stock y rollback en MySQL | Sí |
+| 30/09 19:59 | 2 · #12 | `ken` | Kendel | `af1f206` | Formulario HTTP 403/422/303 | Sí |
+| 30/09 20:01 | 2 · #13 | `ken` | Kendel | `bc497f8` | Historial y ticket reales, HTTP 200 | Sí |
+| 30/09 20:05 | 2 · #14 | `ken` | Kendel | `d01a996` | Reporte local de una venta por tres tipos | Sí |
+| 30/09 20:20 | 2 · #15 | `ken` | Kendel | Commit de esta bitácora | Suite HTTP/MySQL y capturas móvil/escritorio | Sí |
 
-**Fase 1:** Funciones previstas implementadas y probadas: Miguel 5/5, Diego 5/5. Pendiente confirmar push de Diego e integrar en `main` antes de Fase 2.
-**Fase 2:** Pendiente. Resultado de pruebas y bloqueos: —
+**Fase 1:** Hecha y publicada: Miguel 5/5, Diego 5/5. Los cinco hashes de Miguel son ancestros de `Diego`; aparecen en varias ramas sin duplicarse. Integrada por avance directo en `main`.
+**Fase 2:** Hecha y publicada: Kendel 5/5. Venta transaccional, ticket, historial y reporte desde MySQL; suite PHP/HTTP y navegador móvil/escritorio aprobados. Integrada por avance directo en `main`.
 **Fase 3:** Pendiente. Resultado de pruebas y bloqueos: —
-**Entrega:** `main`: — · etiqueta `v2.0`: — · informe PDF: — · URL pública: —
+**Entrega:** `main`: fases 1 y 2 · etiqueta `v2.0`: pendiente · informe PDF: pendiente · URL pública: pendiente
 
 ## Estado para retomar el trabajo
 
-En `Miguel` están `database/schema.sql`, `database/seed.sql`, la conexión PDO, la fábrica, el repositorio de ítems y la validación. `Diego` avanzó por fast-forward desde `Miguel` y añadió `public/` con inicio, catálogo, ficha, alta, edición, confirmación de borrado, CSS, JavaScript del formulario y gestión de imágenes. Hay cinco commits nuevos de cada uno en la historia de `Diego`. La configuración real está ignorada por Git: copiar `config/config.example.php` a `config/config.php` y ajustar los datos locales. Importar primero el esquema y después las semillas; ambos archivos fijan `utf8mb4` para evitar acentos corruptos.
+En `Miguel` están `database/schema.sql`, `database/seed.sql`, la conexión PDO, la fábrica, el repositorio de ítems y la validación. `Diego` avanzó por fast-forward desde `Miguel` y añadió `public/` con inicio, catálogo, ficha, alta, edición, confirmación de borrado, CSS, JavaScript del formulario y gestión de imágenes. `ken` avanzó desde `main` y añadió el repositorio de ventas, cobro web, historial, ticket, reporte y pruebas. Los cinco commits de cada integrante son nuevos respecto a su rama base; los ancestros visibles en otra rama no son duplicados. La configuración real está ignorada por Git: copiar `config/config.example.php` a `config/config.php` y ajustar los datos locales. Importar primero el esquema y después las semillas; ambos archivos fijan `utf8mb4` para evitar acentos corruptos. Al automatizar Docker en PowerShell, copiar los archivos SQL con `docker cp` y ejecutar `source`; canalizar `Get-Content` puede alterar acentos.
 
-Pruebas para retomar: `composer install`, `php tests/check_miguel.php`, `php tests/check_images.php`, `php -S localhost:8000 -t public`. El test de base necesita las nueve semillas. Con MySQL 8 se comprobaron las seis páginas, creación de los tres tipos, validación 422, CSRF 403, PRG 303, edición sin nueva foto, reemplazo y limpieza de la anterior, borrado solo por POST, escape de HTML y conservación de una venta anterior al borrado. El navegador confirmó catálogo y formulario a 390 px y escritorio. Las imágenes reales quedan en `public/uploads/` (ignoradas por Git); los productos de las semillas muestran `public/assets/sin-imagen.svg`.
+Pruebas para retomar: `composer install`, `php tests/check_miguel.php`, `php tests/check_images.php`, `php -S localhost:8000 -t public`. En una **base descartable** con las nueve semillas, ejecutar `CASOB_TEST_DB=1 php tests/check_ventas.php` y `CASOB_TEST_DB=1 php tests/check_web.php` con el servidor encendido (en PowerShell: `$env:CASOB_TEST_DB='1'`; opcionalmente `$env:CASOB_TEST_URL='http://127.0.0.1:8000'`). Las pruebas de ventas crean y limpian sus datos; no apuntarlas a una base de producción. Con MySQL 8 se comprobaron las seis páginas del catálogo y los flujos de venta, ticket y reporte; altas de tres tipos, validación 422, CSRF 403, PRG 303, rollback de sobreventa, edición, reemplazo de imagen, borrado por POST, escape de HTML y ticket histórico tras editar un producto. Playwright confirmó formulario en escritorio y móvil, además de ticket y reporte móvil. Las imágenes reales quedan en `public/uploads/` (ignoradas por Git); las semillas muestran `public/assets/sin-imagen.svg`.
 
 La decisión de mapeo es **una tabla `items` para la jerarquía**: `ItemVendible` es abstracta, `ProductoFisico`, `ProductoDigital` y `Servicio` comparten SKU/nombre/precio/imagen y usan `tipo` más sus columnas propias. `ItemFactory` reconstruye la subclase al leer la fila. `ventas` y `venta_detalles` son tablas aparte; el detalle copia SKU, nombre y precio para preservar tickets aunque se borre el ítem (`item_id` queda nulo). Esto debe pasar al diagrama y la justificación del informe.
 
@@ -121,4 +126,4 @@ La decisión de mapeo es **una tabla `items` para la jerarquía**: `ItemVendible
 | Fecha servicio | `datetime-local` | fecha y hora reales | `DATETIME`, clase |
 | Imagen | `accept`, obligatoria al crear | MIME real, imagen legible, 2 MB | nombre aleatorio y ruta almacenada |
 
-Antes de los commits de Kendel, cambiar `user.name` y `user.email` locales: la configuración actual corresponde a Diego. La rama `ken` y `main` aún no incluyen estos cambios; el siguiente responsable debe incorporarlos de forma explícita.
+Antes de los commits de Rodolfo, cambiar `user.name` y `user.email` locales: la configuración actual corresponde a Kendel. `Rodolfo` aún apunta a la línea base; debe avanzar por `main` antes de trabajar. La cuenta de GitHub usada para subir también debe ser la de Rodolfo. La fase 3 debe cerrar el README, capturas, validación HTML5, informe PDF y etiqueta `v2.0`; aún no están hechos.

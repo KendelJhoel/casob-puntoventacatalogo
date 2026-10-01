@@ -17,6 +17,7 @@ encabezado('Inicio');
             <a class="button" href="catalogo.php">Ver catálogo <span aria-hidden="true">↗</span></a>
             <a class="button button-ghost" href="crear.php">Agregar ítem</a>
             <a class="button button-ghost" href="venta_nueva.php">Cobrar venta</a>
+            <a class="button button-ghost" href="ventas.php">Ver ventas</a>
         </div>
     </div>
     <div class="hero-stat" aria-label="Resumen del catálogo">

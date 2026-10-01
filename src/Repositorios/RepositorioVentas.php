@@ -93,6 +93,33 @@ final class RepositorioVentas
         }
     }
 
+    /** @return array<int,array<string,mixed>> */
+    public function listar(): array
+    {
+        $consulta = $this->pdo->prepare('SELECT id, cliente, total, creada_en FROM ventas ORDER BY id DESC');
+        $consulta->execute();
+        return $consulta->fetchAll();
+    }
+
+    /** @return array<string,mixed>|null */
+    public function buscar(int $id): ?array
+    {
+        $venta = $this->pdo->prepare('SELECT id, cliente, total, creada_en FROM ventas WHERE id = ?');
+        $venta->execute([$id]);
+        $cabecera = $venta->fetch();
+        if ($cabecera === false) {
+            return null;
+        }
+
+        $detalles = $this->pdo->prepare(
+            'SELECT sku, nombre, detalle, cantidad, precio_unitario, subtotal
+             FROM venta_detalles WHERE venta_id = ? ORDER BY id'
+        );
+        $detalles->execute([$id]);
+        $cabecera['detalles'] = $detalles->fetchAll();
+        return $cabecera;
+    }
+
     private static function dinero(int $centavos): string
     {
         return number_format($centavos / 100, 2, '.', '');

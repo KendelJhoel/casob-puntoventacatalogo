@@ -44,7 +44,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         try {
             $ventaId = (new RepositorioVentas($pdo))->registrar($cliente, $seleccion);
             aviso('Venta guardada correctamente.');
-            redirigir('index.php'); // [PRG]
+            redirigir('venta.php?id=' . $ventaId); // [PRG]
         } catch (StockInsuficienteException | InvalidArgumentException $e) {
             $errorGeneral = $e->getMessage();
         } catch (PDOException $e) {

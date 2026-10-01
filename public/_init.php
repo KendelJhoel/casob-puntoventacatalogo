@@ -19,6 +19,7 @@ function csrf(): string
     return $_SESSION['_csrf'] ??= bin2hex(random_bytes(32));
 }
 
+// [SEGURIDAD] Comparación del token de sesión antes de modificar datos.
 function exigirCsrf(): void
 {
     if (!isset($_POST['_csrf']) || !is_string($_POST['_csrf']) || !hash_equals(csrf(), $_POST['_csrf'])) {

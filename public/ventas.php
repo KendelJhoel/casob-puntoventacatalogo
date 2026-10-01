@@ -5,7 +5,7 @@ declare(strict_types=1);
 use App\Repositorios\RepositorioVentas;
 
 require __DIR__ . '/_init.php';
-require __DIR__ . '/_layout.php';
+require __DIR__ . '/../views/layout/encabezado.php';
 
 $ventas = (new RepositorioVentas($pdo))->listar();
 encabezado('Ventas');

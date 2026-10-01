@@ -19,13 +19,14 @@ $tipos = ['fisico' => 'Producto físico', 'digital' => 'Producto digital', 'serv
     <div class="form-grid">
         <div class="field">
             <label for="sku">SKU</label>
-            <input id="sku" name="sku" type="text" required maxlength="40" pattern="[A-Za-z0-9_-]+" value="<?= e($datos['sku'] ?? '') ?>" aria-invalid="<?= isset($errores['sku']) ? 'true' : 'false' ?>" aria-describedby="sku-ayuda<?= isset($errores['sku']) ? ' sku-error' : '' ?>">
+            <input id="sku" name="sku" type="text" required maxlength="40" pattern="[A-Za-z0-9_\-]+" value="<?= e($datos['sku'] ?? '') ?>" aria-invalid="<?= isset($errores['sku']) ? 'true' : 'false' ?>" aria-describedby="sku-ayuda<?= isset($errores['sku']) ? ' sku-error' : '' ?>">
             <small id="sku-ayuda">Letras, números y guiones. Debe ser único.</small>
             <?php if (isset($errores['sku'])): ?><span class="error" id="sku-error"><?= e($errores['sku']) ?></span><?php endif; ?>
         </div>
         <div class="field">
             <label for="tipo">Tipo</label>
             <select id="tipo" name="tipo" required aria-invalid="<?= isset($errores['tipo']) ? 'true' : 'false' ?>">
+                <option value="">Selecciona un tipo</option>
                 <?php foreach ($tipos as $valor => $etiqueta): ?>
                     <option value="<?= e($valor) ?>" <?= ($datos['tipo'] ?? 'fisico') === $valor ? 'selected' : '' ?>><?= e($etiqueta) ?></option>
                 <?php endforeach; ?>

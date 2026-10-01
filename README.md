@@ -19,15 +19,48 @@ Sistema de **Punto de Venta y Catálogo Web** desarrollado en PHP con Programaci
 
 ---
 
-## Requisitos
+## Arranque con Docker Compose (recomendado para el equipo)
+
+Instala Git y Docker Desktop con Docker Compose v2, abre Docker Desktop y utiliza contenedores Linux. En Linux también sirve Docker Engine con el plugin Compose. No necesitas instalar PHP, Composer ni MySQL en tu PC para esta opción.
+
+```bash
+git clone https://github.com/KendelJhoel/casob-puntoventacatalogo.git
+cd casob-puntoventacatalogo
+cp .env.example .env
+```
+
+En PowerShell, el último comando también puede escribirse `Copy-Item .env.example .env`. Edita `.env` y elige contraseñas distintas para `MYSQL_PASSWORD` y `MYSQL_ROOT_PASSWORD` **antes del primer arranque**. Es un archivo local ignorado por Git. Luego ejecuta:
+
+```bash
+docker compose up -d --build --wait
+```
+
+Abre **http://localhost:8000**. Si el puerto está ocupado, cambia `APP_PORT` en `.env` y vuelve a ejecutar el comando. La primera construcción descarga PHP 8.3, Composer 2 y MySQL 8.4; puede tardar varios minutos.
+
+Compose prepara el autoload, las extensiones PHP, la configuración por variables de entorno y las nueve semillas. Espera a que MySQL esté disponible antes de iniciar la web. La aplicación utiliza un usuario de BD propio; MySQL no publica ningún puerto en la PC. La web solo se publica en localhost. Este entorno utiliza el servidor integrado PHP para desarrollo y la demostración académica.
+
+| Comando | Uso |
+| --- | --- |
+| `docker compose ps` | Comprobar que ambos servicios estén saludables. |
+| `docker compose logs --tail=50 web db` | Revisar errores de arranque. |
+| `docker compose down` | Detener sin borrar los datos. |
+| `docker compose up -d --build --wait` | Arrancar o reconstruir tras descargar cambios. |
+| `docker compose exec web php main.php` | Ejecutar la demostración de consola. |
+| `docker compose exec web php app.php` | Abrir la consola interactiva. |
+
+La BD, las imágenes y los tickets de consola se conservan en volúmenes Docker. Las semillas se importan **solo cuando la BD está vacía**, no en cada reinicio. No uses `docker compose down -v` si quieres conservar los datos: elimina esos volúmenes. Cambiar las contraseñas de `.env` después de inicializar MySQL no cambia automáticamente los usuarios que ya existen.
+
+Esta opción no usa tu `config/config.php` local: construye la configuración dentro de la imagen a partir de la plantilla y recibe la contraseña del entorno. El código se copia a la imagen al construir; tras modificarlo hay que reconstruir con `--build`.
+
+## Requisitos para ejecutar sin Docker
 
 | Herramienta     | Versión mínima |
 |-----------------|----------------|
 | PHP             | 8.1 o superior |
-| MySQL / MariaDB | 8.0 / 10.5     |
+| MySQL / MariaDB | 8.0.16 / 10.5  |
 | Composer        | 2.x            |
 
-Verifica tus versiones:
+PHP necesita las extensiones `pdo_mysql`, `mbstring` y `fileinfo`; Composer comprueba que estén disponibles. Verifica tus versiones:
 
 ```bash
 php -v
@@ -37,7 +70,7 @@ composer --version
 
 ---
 
-## Instalación — Aplicación Web
+## Instalación — Aplicación Web sin Docker
 
 ### 1. Clonar el repositorio
 
@@ -62,6 +95,8 @@ Abre `config/config.php` y ajusta el host, puerto, nombre de base de datos, usua
 
 ### 4. Crear la base de datos e importar el esquema
 
+Los siguientes comandos usan redirección de Bash (Git Bash en Windows) o CMD:
+
 ```bash
 # Crea la base (si no existe)
 mysql -u root -p -e "CREATE DATABASE IF NOT EXISTS casob_puntoventa CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;"
@@ -72,6 +107,15 @@ mysql -u root -p casob_puntoventa < database/schema.sql
 # Importa los datos de ejemplo (9 ítems: 3 físicos, 3 digitales, 3 servicios)
 mysql -u root -p casob_puntoventa < database/seed.sql
 ```
+
+En PowerShell usa el comando `source` del cliente MySQL, desde la raíz del proyecto:
+
+```powershell
+mysql -u root -p -e "source database/schema.sql"
+mysql -u root -p -e "source database/seed.sql"
+```
+
+`schema.sql` recrea las tablas y elimina sus datos anteriores. Úsalo para una base nueva o descartable, no para actualizar datos que debas conservar.
 
 ### 5. Levantar el servidor de desarrollo
 
@@ -116,7 +160,7 @@ php app.php
 | `L`   | Limpiar el carrito               |
 | `S`   | Salir del sistema                |
 
-El ticket se guarda en `tickets/ticket_XXXXXXXX.txt`.
+El ticket se guarda en `tickets/ticket_XXXXXXXX.json`.
 
 ---
 
@@ -133,6 +177,8 @@ El ticket se guarda en `tickets/ticket_XXXXXXXX.txt`.
 | Historial de ventas | ![Ventas](public/assets/capturas/07-ventas.png) |
 | Ticket de venta | ![Ticket](public/assets/capturas/08-ticket.png) |
 | Reporte del día | ![Reporte](public/assets/capturas/09-reporte.png) |
+| Confirmación de eliminación | ![Confirmación](public/assets/capturas/10-confirmacion.png) |
+| Validación PHP con HTML5 desactivado | ![Errores del servidor](public/assets/capturas/11-validacion-servidor.png) |
 
 ---
 
@@ -155,10 +201,8 @@ casob-puntoventacatalogo/
 │   ├── crear.php / editar.php / detalle.php / eliminar.php
 │   ├── venta_nueva.php / ventas.php / venta.php / reporte.php
 │   ├── _init.php                    # Bootstrap: PDO, sesión, helpers
-│   ├── _layout.php                  # Cabecera y pie HTML compartidos
-│   ├── _formulario_item.php         # Partial del formulario de ítems
+│   ├── css/estilos.css              # Hoja de estilos única y propia
 │   ├── assets/
-│   │   ├── styles.css               # Hoja de estilos propia
 │   │   ├── forms.js                 # Lógica JS del formulario
 │   │   └── sin-imagen.svg           # Imagen por defecto
 │   └── uploads/                     # Imágenes subidas (ignoradas por Git)
@@ -168,9 +212,14 @@ casob-puntoventacatalogo/
 │   ├── Infraestructura/             # Conexión PDO
 │   ├── Modelos/                     # ItemVendible, ProductoFisico, etc.
 │   ├── Repositorios/                # RepositorioItems, RepositorioVentas
-│   └── Servicios/                   # Carrito, GestorImagenes, ItemFactory, Validador
+│   └── Servicios/                   # Carrito, GestorImagenes, Validador
+├── views/
+│   ├── layout/encabezado.php, pie.php
+│   └── partials/formulario_item.php
+├── compose.yml / Dockerfile         # Entorno local reproducible
+├── .env.example                    # Variables de ejemplo para Compose
 ├── tests/                           # Scripts de comprobación
-└── tickets/                         # Tickets de consola (.txt, ignorados por Git)
+└── tickets/                         # Tickets de consola (.json, ignorados por Git)
 ```
 
 ---
@@ -192,6 +241,36 @@ Si agregas nuevas clases, regenera el autoloader:
 ```bash
 composer dump-autoload
 ```
+
+## Comprobaciones
+
+En una instalación local con una **base descartable** y las nueve semillas:
+
+```bash
+php tests/check_miguel.php
+php tests/check_images.php
+php tests/check_seguridad.php
+CASOB_TEST_DB=1 php tests/check_ventas.php
+CASOB_TEST_DB=1 CASOB_TEST_URL=http://127.0.0.1:8000 php tests/check_web.php
+```
+
+En PowerShell establece primero `$env:CASOB_TEST_DB='1'` y `$env:CASOB_TEST_URL='http://127.0.0.1:8000'`, y ejecuta los mismos archivos PHP. La prueba web necesita el servidor encendido.
+
+Con Compose, sobre datos de prueba:
+
+```bash
+docker compose exec web php tests/check_miguel.php
+docker compose exec web php tests/check_images.php
+docker compose exec web php tests/check_seguridad.php
+docker compose exec -e CASOB_TEST_DB=1 web php tests/check_ventas.php
+docker compose exec -e CASOB_TEST_DB=1 web php tests/check_web.php
+```
+
+Las pruebas de BD crean/modifican registros temporales y luego los limpian. No ejecutarlas contra datos reales ni mientras alguien modifica el catálogo. La revisión estática de seguridad es una ayuda; se complementa con las pruebas HTTP de CSRF, escape, validación, stock y transacciones.
+
+Verificación técnica del 01/10/2026: las diez páginas renderizadas pasaron el validador W3C sin errores ni avisos; respuestas guardadas en [tests/evidencias/html5.json](tests/evidencias/html5.json). También se probaron escritorio/móvil, 47 comprobaciones HTTP adicionales y persistencia de la base e imágenes al recrear los contenedores. Esta evidencia corresponde al código corregido y debe repetirse si se modifica el HTML.
+
+Referencia del arranque con dependencias saludables: [documentación de Docker Compose](https://docs.docker.com/compose/how-tos/startup-order/).
 
 ---
 

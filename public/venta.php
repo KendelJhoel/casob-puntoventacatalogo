@@ -5,7 +5,7 @@ declare(strict_types=1);
 use App\Repositorios\RepositorioVentas;
 
 require __DIR__ . '/_init.php';
-require __DIR__ . '/_layout.php';
+require __DIR__ . '/../views/layout/encabezado.php';
 
 $id = filter_var($_GET['id'] ?? null, FILTER_VALIDATE_INT, ['options' => ['min_range' => 1]]);
 $venta = $id === false || $id === null ? null : (new RepositorioVentas($pdo))->buscar($id);

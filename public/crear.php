@@ -7,7 +7,7 @@ use App\Servicios\GestorImagenes;
 use App\Servicios\Validador;
 
 require __DIR__ . '/_init.php';
-require __DIR__ . '/_layout.php';
+require __DIR__ . '/../views/layout/encabezado.php';
 
 $datos = $_SERVER['REQUEST_METHOD'] === 'POST' ? $_POST : ['tipo' => 'fisico'];
 $errores = [];
@@ -51,5 +51,5 @@ $imagenObligatoria = true;
 encabezado('Nuevo ítem');
 ?>
 <div class="page-top"><div><p class="eyebrow">Catálogo</p><h1>Nuevo ítem</h1><p>Completa los datos y elige una imagen para publicar el ítem.</p></div></div>
-<?php require __DIR__ . '/_formulario_item.php'; ?>
+<?php require __DIR__ . '/../views/partials/formulario_item.php'; ?>
 <?php pie(); ?>

@@ -5,7 +5,7 @@ declare(strict_types=1);
 use App\Repositorios\RepositorioVentas;
 
 require __DIR__ . '/_init.php';
-require __DIR__ . '/_layout.php';
+require __DIR__ . '/../views/layout/encabezado.php';
 
 $reporte = (new RepositorioVentas($pdo))->reporteHoy();
 $catalogo = [];
@@ -18,8 +18,8 @@ encabezado('Reporte del día');
 ?>
 <section class="page-top"><div><p class="eyebrow">Resumen del negocio</p><h1>Reporte del día</h1><p>Ventas registradas el <?= e($reporte['fecha']) ?>, hora de El Salvador.</p></div></section>
 <div class="report-stats">
-    <article class="panel"><span>Ventas cobradas</span><strong><?= (int) $reporte['cantidad'] ?></strong></article>
-    <article class="panel"><span>Ingreso total</span><strong>$<?= number_format((float) $reporte['total'], 2) ?></strong></article>
+    <article class="panel"><h2>Ventas cobradas</h2><strong><?= (int) $reporte['cantidad'] ?></strong></article>
+    <article class="panel"><h2>Ingreso total</h2><strong>$<?= number_format((float) $reporte['total'], 2) ?></strong></article>
 </div>
 <section class="section-block">
     <div class="section-heading"><div><p class="eyebrow">Desde los tickets</p><h2>Ítems vendidos hoy</h2></div></div>

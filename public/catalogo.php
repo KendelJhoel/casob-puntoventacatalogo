@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 require __DIR__ . '/_init.php';
-require __DIR__ . '/_layout.php';
+require __DIR__ . '/../views/layout/encabezado.php';
 
 $items = $repo->listar();
 encabezado('Catálogo');
@@ -22,10 +22,10 @@ encabezado('Catálogo');
                 <img src="<?= e(rutaImagen($item->getImagen())) ?>" alt="Imagen de <?= e($item->getNombre()) ?>" loading="lazy">
                 <div class="item-card-body">
                     <span class="badge"><?= e($item->getEtiquetaTipo()) ?></span>
-                    <h3><?= e($item->getNombre()) ?></h3>
+                    <h2><?= e($item->getNombre()) ?></h2>
                     <p><?= e($item->getId()) ?><?= e($item->getInfoCatalogo()) ?></p>
                     <span class="price">$<?= number_format($item->calcularPrecioFinal(), 2) ?></span>
-                    <div class="card-actions"><a class="text-link" href="detalle.php?id=<?= (int) $item->getDatabaseId() ?>">Ver detalle <span aria-hidden="true">→</span></a><a class="text-link" href="editar.php?id=<?= (int) $item->getDatabaseId() ?>">Editar</a></div>
+                    <div class="card-actions"><a class="text-link" href="detalle.php?id=<?= (int) $item->getDatabaseId() ?>">Ver detalle <span aria-hidden="true">→</span></a><a class="text-link" href="editar.php?id=<?= (int) $item->getDatabaseId() ?>">Editar</a><a class="text-link" href="eliminar.php?id=<?= (int) $item->getDatabaseId() ?>">Eliminar</a></div>
                 </div>
             </article>
         <?php endforeach; ?>

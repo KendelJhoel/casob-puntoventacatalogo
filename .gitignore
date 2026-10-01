@@ -1,5 +1,7 @@
 /vendor/
-composer.lock
+.env
+/.playwright-cli/
+/output/
 *.DS_Store
 .idea/
 .vscode/

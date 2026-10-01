@@ -28,7 +28,7 @@ class ProductoFisico extends ItemVendible
     ) {
         parent::__construct($id, $nombre, $precioBase, $databaseId, $imagen);
 
-        if ($this->stock < 0) {
+        if ($this->stock < 0 || $this->stock > 2147483647) {
             throw new \InvalidArgumentException(
                 "El stock inicial de '{$nombre}' no puede ser negativo."
             );
@@ -56,6 +56,14 @@ class ProductoFisico extends ItemVendible
     public function requiereCantidad(): bool
     {
         return true;
+    }
+
+    public static function validarCamposPropios(array $datos): array
+    {
+        $stock = filter_var($datos['stock'] ?? null, FILTER_VALIDATE_INT,
+            ['options' => ['min_range' => 0, 'max_range' => 2147483647]]);
+        return $stock === false || $stock === null
+            ? ['stock' => 'Las existencias deben ser un entero no negativo, hasta 2147483647.'] : [];
     }
 
     public function getCamposPropios(): array

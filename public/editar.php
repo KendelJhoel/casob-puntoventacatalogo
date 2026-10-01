@@ -7,7 +7,7 @@ use App\Servicios\GestorImagenes;
 use App\Servicios\Validador;
 
 require __DIR__ . '/_init.php';
-require __DIR__ . '/_layout.php';
+require __DIR__ . '/../views/layout/encabezado.php';
 
 $id = filter_input(INPUT_GET, 'id', FILTER_VALIDATE_INT, ['options' => ['min_range' => 1]]);
 $itemActual = $id ? $repo->buscar($id) : null;
@@ -75,5 +75,5 @@ $imagenObligatoria = false;
 encabezado('Editar ítem');
 ?>
 <div class="page-top"><div><p class="eyebrow">Catálogo</p><h1>Editar ítem</h1><p>Actualiza los datos o reemplaza la imagen actual.</p></div></div>
-<?php require __DIR__ . '/_formulario_item.php'; ?>
+<?php require __DIR__ . '/../views/partials/formulario_item.php'; ?>
 <?php pie(); ?>

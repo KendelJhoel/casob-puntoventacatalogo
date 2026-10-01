@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Servicios;
 
 use DateTimeImmutable;
+use App\Modelos\ItemFactory;
 
 /** Validación del servidor, independiente de los atributos HTML5. [VALIDACION] */
 final class Validador
@@ -32,20 +33,7 @@ final class Validador
             return $errores;
         }
 
-        if ($tipo === 'fisico') {
-            $stock = filter_var($datos['stock'] ?? null, FILTER_VALIDATE_INT, ['options' => ['min_range' => 0]]);
-            if ($stock === false || $stock === null) {
-                $errores['stock'] = 'Las existencias deben ser un entero no negativo.';
-            }
-        } elseif ($tipo === 'digital') {
-            $url = self::texto($datos, 'enlace_descarga');
-            if (strlen($url) > 2048 || !filter_var($url, FILTER_VALIDATE_URL)
-                || !in_array(parse_url($url, PHP_URL_SCHEME), ['http', 'https'], true)) {
-                $errores['enlace_descarga'] = 'Ingresa una URL http o https válida.';
-            }
-        } elseif (!self::fechaValida(self::texto($datos, 'fecha_agenda'))) {
-            $errores['fecha_agenda'] = 'Ingresa una fecha y hora válidas.';
-        }
+        $errores += ItemFactory::validarCamposPropios($tipo, $datos);
 
         return $errores;
     }

@@ -29,6 +29,13 @@ class Servicio extends ItemVendible
         }
     }
 
+    public static function validarCamposPropios(array $datos): array
+    {
+        $fecha = is_scalar($datos['fecha_agenda'] ?? null) ? trim((string) $datos['fecha_agenda']) : '';
+        return \App\Servicios\Validador::fechaValida($fecha)
+            ? [] : ['fecha_agenda' => 'Ingresa una fecha y hora válidas.'];
+    }
+
     public function getCamposPropios(): array
     {
         return ['stock' => null, 'enlace_descarga' => null, 'fecha_agenda' => $this->fechaAgenda];

@@ -23,6 +23,10 @@ $base = ['sku' => 'SKU-999', 'nombre' => 'Prueba', 'precio_base' => '10.50', 'ti
 comprobar(Validador::item($base) === [], 'El físico válido fue rechazado.');
 comprobar(isset(Validador::item([...$base, 'stock' => '-1'])['stock']), 'Stock negativo aceptado.');
 comprobar(isset(Validador::item([...$base, 'stock' => null])['stock']), 'Stock ausente aceptado.');
+comprobar(isset(Validador::item([...$base, 'stock' => '2147483648'])['stock']), 'Stock fuera del rango SQL aceptado.');
+comprobar(isset(Validador::item([...$base, 'sku' => 'SKU CON ESPACIOS!'])['sku']), 'SKU inválido aceptado.');
+comprobar(isset(Validador::item([...$base, 'tipo' => 'servicio', 'fecha_agenda' => '2026-02-30T10:00'])['fecha_agenda']), 'Fecha inexistente aceptada por el formulario.');
+comprobar(isset(Validador::item([...$base, 'tipo' => 'digital', 'enlace_descarga' => []])['enlace_descarga']), 'URL no escalar aceptada.');
 comprobar(isset(Validador::item([...$base, 'precio_base' => '0'])['precio_base']), 'Precio cero aceptado.');
 comprobar(isset(Validador::item([...$base, 'nombre' => []])['nombre']), 'Dato no escalar aceptado.');
 comprobar(isset(Validador::item([...$base, 'tipo' => 'digital', 'enlace_descarga' => 'javascript:alert(1)'])['enlace_descarga']), 'URL peligrosa aceptada.');

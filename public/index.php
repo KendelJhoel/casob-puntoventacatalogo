@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 require __DIR__ . '/_init.php';
-require __DIR__ . '/_layout.php';
+require __DIR__ . '/../views/layout/encabezado.php';
 
 $items = $repo->listar();
 encabezado('Inicio');
@@ -20,7 +20,7 @@ encabezado('Inicio');
             <a class="button button-ghost" href="ventas.php">Ver ventas</a>
         </div>
     </div>
-    <div class="hero-stat" aria-label="Resumen del catálogo">
+    <div class="hero-stat" role="group" aria-label="Resumen del catálogo">
         <span class="stat-number"><?= count($items) ?></span>
         <span>ítems en el catálogo</span>
         <small>Datos actuales de la base</small>

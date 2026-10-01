@@ -1,5 +1,15 @@
 # Plan y bitácora de la Fase 2 — Caso B: punto de venta
 
+## Actualización técnica del 01/10/2026 después de la revisión
+
+Se corrigieron localmente los errores HTML5, el patrón cliente del SKU, la acción de eliminar del listado y las rutas de layout/parciales/CSS exigidas. Las reglas específicas se delegan a cada subclase mediante la fábrica; se reforzó el límite SQL del stock y la ubicación de etiquetas de conceptos. Se añadieron Compose, Dockerfile, plantilla de entorno, extensiones y lock de Composer, persistencia en volúmenes y README reproducible.
+
+Pruebas pasadas: suites PHP/MySQL/HTTP; 47 verificaciones adicionales de CRUD e imágenes; diez páginas en 1440 y 390 px; diez páginas con cero mensajes W3C; arranque limpio y recreación de Compose conservando BD e imagen. Entorno Compose: PHP 8.3, MySQL 8.4; puerto local usado en esta PC: 8012. Las capturas de confirmación y errores se añadieron al README y las respuestas W3C a `tests/evidencias/html5.json`.
+
+**Autoría y ramas de estas correcciones:** KendelJhoel, rama `ken`, con integración en `main`. Son correcciones adicionales a los veinte commits iniciales. `v2.0` sigue señalando la entrega anterior `407d019`; para ejecutar las correcciones se debe descargar `main` actualizado. El informe académico queda a cargo de los compañeros por instrucción del usuario; no se editó ni se generó un PDF en esta corrección.
+
+Las anotaciones históricas siguientes describen las tres fases originales; esta actualización prevalece para el estado técnico actual.
+
 **Fuente:** `C:\Users\user\Desktop\Proyecto_Fase2_Aplicacion_Web_PHP.pdf` (18 páginas). **Línea base:** al iniciar, `main`, `ken`, `Miguel`, `Diego` y `Rodolfo` apuntaban a `46021cf`. **Estado actual:** Miguel completó la persistencia, Diego el catálogo web y Kendel las ventas, tickets y el reporte. Las fases 1 y 2 están probadas; falta la fase 3 de Rodolfo. Este documento reúne el plan y el registro de ejecución; **Pendiente** no significa realizado.
 
 | Fase de trabajo | Fecha local (Guatemala) | Rama y responsable previsto | Commits de trabajo | Resultado que debe quedar funcionando |

@@ -165,6 +165,7 @@ echo "\n[5] Etiquetas [CONCEPTO]\n";
 
 $etiquetasEsperadas = [
     '[ABSTRACCION]'           => $raiz . '/src',
+    '[COMPOSICION]'           => $raiz . '/src',
     '[HERENCIA]'              => $raiz . '/src',
     '[POLIMORFISMO]'          => $raiz . '/src',
     '[INTERFAZ]'              => $raiz . '/src',

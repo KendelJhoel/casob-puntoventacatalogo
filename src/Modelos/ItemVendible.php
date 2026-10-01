@@ -26,6 +26,7 @@ abstract class ItemVendible implements Facturable
         protected readonly ?int $databaseId = null,
         protected readonly ?string $imagen = null
     ) {
+        // [VALIDACION] Las invariantes también se exigen al construir el modelo.
         if (!preg_match('/^[A-Za-z0-9_-]{1,40}$/D', $this->id)) {
             throw new \InvalidArgumentException('El SKU no es válido.');
         }
@@ -84,6 +85,9 @@ abstract class ItemVendible implements Facturable
 
     /** @return array{stock:?int,enlace_descarga:?string,fecha_agenda:?string} */
     abstract public function getCamposPropios(): array;
+
+    /** @param array<string,mixed> $datos @return array<string,string> */
+    abstract public static function validarCamposPropios(array $datos): array;
 
     abstract public function getTipo(): string;
 

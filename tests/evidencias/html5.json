@@ -1,0 +1,92 @@
+[
+    {
+        "pagina":  "catalogo",
+        "resultado":  {
+                          "version":  "26.9.30",
+                          "messages":  [
+
+                                       ]
+                      }
+    },
+    {
+        "pagina":  "crear",
+        "resultado":  {
+                          "version":  "26.9.30",
+                          "messages":  [
+
+                                       ]
+                      }
+    },
+    {
+        "pagina":  "detalle",
+        "resultado":  {
+                          "version":  "26.9.30",
+                          "messages":  [
+
+                                       ]
+                      }
+    },
+    {
+        "pagina":  "editar",
+        "resultado":  {
+                          "version":  "26.9.30",
+                          "messages":  [
+
+                                       ]
+                      }
+    },
+    {
+        "pagina":  "eliminar",
+        "resultado":  {
+                          "version":  "26.9.30",
+                          "messages":  [
+
+                                       ]
+                      }
+    },
+    {
+        "pagina":  "index",
+        "resultado":  {
+                          "version":  "26.9.30",
+                          "messages":  [
+
+                                       ]
+                      }
+    },
+    {
+        "pagina":  "reporte",
+        "resultado":  {
+                          "version":  "26.9.30",
+                          "messages":  [
+
+                                       ]
+                      }
+    },
+    {
+        "pagina":  "venta",
+        "resultado":  {
+                          "version":  "26.9.30",
+                          "messages":  [
+
+                                       ]
+                      }
+    },
+    {
+        "pagina":  "ventas",
+        "resultado":  {
+                          "version":  "26.9.30",
+                          "messages":  [
+
+                                       ]
+                      }
+    },
+    {
+        "pagina":  "venta_nueva",
+        "resultado":  {
+                          "version":  "26.9.30",
+                          "messages":  [
+
+                                       ]
+                      }
+    }
+]

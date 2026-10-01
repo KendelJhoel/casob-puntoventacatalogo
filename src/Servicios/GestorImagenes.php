@@ -36,6 +36,7 @@ final class GestorImagenes
             return 'La imagen debe pesar entre 1 byte y 2 MB.';
         }
 
+        // [SEGURIDAD] Se comprueba el contenido real, no la extensión enviada.
         $mime = (new finfo(FILEINFO_MIME_TYPE))->file($temporal);
         if (!isset(self::EXTENSIONES[$mime]) || getimagesize($temporal) === false) {
             return 'El archivo debe ser una imagen JPG, PNG o WEBP real.';
@@ -55,6 +56,7 @@ final class GestorImagenes
         }
 
         $temporal = $archivo['tmp_name'];
+        // [SEGURIDAD] Se comprueba el contenido real, no la extensión enviada.
         $mime = (new finfo(FILEINFO_MIME_TYPE))->file($temporal);
         $nombre = bin2hex(random_bytes(16)) . '.' . self::EXTENSIONES[$mime];
         if (!is_dir($this->directorio) && !mkdir($this->directorio, 0755, true) && !is_dir($this->directorio)) {

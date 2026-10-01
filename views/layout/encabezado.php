@@ -13,7 +13,7 @@ function encabezado(string $titulo): void
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <title><?= e($titulo) ?> · Caso B</title>
-        <link rel="stylesheet" href="assets/styles.css">
+        <link rel="stylesheet" href="css/estilos.css">
     </head>
     <body>
         <header class="site-header">
@@ -36,12 +36,4 @@ function encabezado(string $titulo): void
     <?php
 }
 
-function pie(): void
-{
-    ?>
-        </main>
-        <footer class="site-footer"><div class="container">Caso B · Catálogo y punto de venta</div></footer>
-    </body>
-    </html>
-    <?php
-}
+require __DIR__ . '/pie.php';

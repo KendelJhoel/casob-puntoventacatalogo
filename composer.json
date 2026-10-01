@@ -3,7 +3,10 @@
     "description": "Caso B — Sistema de punto de venta y catálogo con POO en PHP",
     "type": "project",
     "require": {
-        "php": ">=8.1"
+        "php": ">=8.1",
+        "ext-pdo_mysql": "*",
+        "ext-mbstring": "*",
+        "ext-fileinfo": "*"
     },
     "autoload": {
         "psr-4": {

@@ -31,6 +31,14 @@ class ProductoDigital extends ItemVendible
         }
     }
 
+    public static function validarCamposPropios(array $datos): array
+    {
+        $url = is_scalar($datos['enlace_descarga'] ?? null) ? trim((string) $datos['enlace_descarga']) : '';
+        return strlen($url) > 2048 || !filter_var($url, FILTER_VALIDATE_URL)
+            || !in_array(parse_url($url, PHP_URL_SCHEME), ['http', 'https'], true)
+            ? ['enlace_descarga' => 'Ingresa una URL http o https válida.'] : [];
+    }
+
     public function getCamposPropios(): array
     {
         return ['stock' => null, 'enlace_descarga' => $this->enlaceDescarga, 'fecha_agenda' => null];

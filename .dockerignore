@@ -1,0 +1,13 @@
+.git
+.env
+.env.*
+vendor
+config/config.php
+public/uploads/*
+!public/uploads/.gitkeep
+public/assets/capturas
+tickets
+output
+*.md
+*.pdf
+.playwright-cli

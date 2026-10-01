@@ -31,11 +31,23 @@ final class ItemFactory
         };
     }
 
+    /** @param array<string,mixed> $datos @return array<string,string> */
+    public static function validarCamposPropios(string $tipo, array $datos): array
+    {
+        $clase = match ($tipo) {
+            'fisico' => ProductoFisico::class,
+            'digital' => ProductoDigital::class,
+            'servicio' => Servicio::class,
+            default => throw new InvalidArgumentException('Tipo de ítem desconocido.'),
+        };
+        return $clase::validarCamposPropios($datos); // [POLIMORFISMO]
+    }
+
     /** @return array{campo:string,etiqueta:string,tipo:string,restricciones:string} */
     public static function campoPropio(string $tipo): array
     {
         return match ($tipo) {
-            'fisico' => ['campo' => 'stock', 'etiqueta' => 'Existencias', 'tipo' => 'number', 'restricciones' => 'min="0" step="1"'],
+            'fisico' => ['campo' => 'stock', 'etiqueta' => 'Existencias', 'tipo' => 'number', 'restricciones' => 'min="0" max="2147483647" step="1"'],
             'digital' => ['campo' => 'enlace_descarga', 'etiqueta' => 'Enlace de descarga', 'tipo' => 'url', 'restricciones' => 'maxlength="2048"'],
             'servicio' => ['campo' => 'fecha_agenda', 'etiqueta' => 'Fecha y hora', 'tipo' => 'datetime-local', 'restricciones' => ''],
             default => throw new InvalidArgumentException('Tipo de ítem desconocido.'),

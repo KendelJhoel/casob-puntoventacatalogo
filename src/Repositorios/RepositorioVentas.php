@@ -10,9 +10,10 @@ use InvalidArgumentException;
 use PDO;
 use Throwable;
 
-/** Las ventas, sus líneas y el stock se confirman juntos. [COMPOSICION] [SEGURIDAD] */
+/** Las ventas, sus líneas y el stock se confirman juntos. [SEGURIDAD] */
 final class RepositorioVentas
 {
+    // [INYECCION-DEPENDENCIAS] El repositorio recibe una conexión ya creada.
     public function __construct(private readonly PDO $pdo)
     {
     }

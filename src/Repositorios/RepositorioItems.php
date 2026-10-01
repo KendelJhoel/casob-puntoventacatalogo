@@ -12,6 +12,7 @@ use PDO;
 /** El catálogo accede a MySQL solo a través de consultas preparadas. [INYECCION-DEPENDENCIAS] [SEGURIDAD] */
 final class RepositorioItems
 {
+    // [INYECCION-DEPENDENCIAS] El repositorio recibe una conexión ya creada.
     public function __construct(private readonly PDO $pdo)
     {
     }
@@ -19,6 +20,7 @@ final class RepositorioItems
     /** @return ItemVendible[] */
     public function listar(): array
     {
+        // [SEGURIDAD] Los parámetros del usuario se enlazan por separado del SQL.
         $consulta = $this->pdo->prepare('SELECT * FROM items ORDER BY id DESC');
         $consulta->execute();
         $filas = $consulta->fetchAll();
@@ -27,6 +29,7 @@ final class RepositorioItems
 
     public function buscar(int $id): ?ItemVendible
     {
+        // [SEGURIDAD] Los parámetros del usuario se enlazan por separado del SQL.
         $consulta = $this->pdo->prepare('SELECT * FROM items WHERE id = :id');
         $consulta->execute(['id' => $id]);
         $fila = $consulta->fetch();
@@ -35,6 +38,7 @@ final class RepositorioItems
 
     public function crear(ItemVendible $item): int
     {
+        // [SEGURIDAD] Los parámetros del usuario se enlazan por separado del SQL.
         $consulta = $this->pdo->prepare(
             'INSERT INTO items (sku, tipo, nombre, precio_base, stock, enlace_descarga, fecha_agenda, imagen)
              VALUES (:sku, :tipo, :nombre, :precio_base, :stock, :enlace_descarga, :fecha_agenda, :imagen)'
@@ -49,6 +53,7 @@ final class RepositorioItems
             throw new InvalidArgumentException('El ítem todavía no existe en la base.');
         }
 
+        // [SEGURIDAD] Los parámetros del usuario se enlazan por separado del SQL.
         $consulta = $this->pdo->prepare(
             'UPDATE items SET sku = :sku, tipo = :tipo, nombre = :nombre,
              precio_base = :precio_base, stock = :stock, enlace_descarga = :enlace_descarga,
@@ -62,6 +67,7 @@ final class RepositorioItems
 
     public function eliminar(int $id): bool
     {
+        // [SEGURIDAD] Los parámetros del usuario se enlazan por separado del SQL.
         $consulta = $this->pdo->prepare('DELETE FROM items WHERE id = :id');
         $consulta->execute(['id' => $id]); // [CRUD-DELETE]
         return $consulta->rowCount() > 0;

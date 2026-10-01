@@ -6,7 +6,7 @@ use App\Excepciones\StockInsuficienteException;
 use App\Repositorios\RepositorioVentas;
 
 require __DIR__ . '/_init.php';
-require __DIR__ . '/_layout.php';
+require __DIR__ . '/../views/layout/encabezado.php';
 
 $items = $repo->listar();
 $cliente = $_SERVER['REQUEST_METHOD'] === 'POST' ? ($_POST['cliente'] ?? '') : '';

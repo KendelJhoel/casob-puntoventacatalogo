@@ -120,6 +120,22 @@ El ticket se guarda en `tickets/ticket_XXXXXXXX.txt`.
 
 ---
 
+## Capturas de pantalla
+
+| Módulo | Vista |
+|--------|-------|
+| Inicio | ![Inicio](public/assets/capturas/01-inicio.png) |
+| Catálogo | ![Catálogo](public/assets/capturas/02-catalogo.png) |
+| Alta de ítem | ![Crear](public/assets/capturas/03-crear.png) |
+| Edición de ítem | ![Editar](public/assets/capturas/04-editar.png) |
+| Ficha de ítem | ![Detalle](public/assets/capturas/05-detalle.png) |
+| Nueva venta | ![Venta](public/assets/capturas/06-venta-nueva.png) |
+| Historial de ventas | ![Ventas](public/assets/capturas/07-ventas.png) |
+| Ticket de venta | ![Ticket](public/assets/capturas/08-ticket.png) |
+| Reporte del día | ![Reporte](public/assets/capturas/09-reporte.png) |
+
+---
+
 ## Estructura del proyecto
 
 ```

@@ -120,6 +120,26 @@ final class RepositorioVentas
         return $cabecera;
     }
 
+    /** @return array{fecha:string,cantidad:int,total:string,productos:array<int,array<string,mixed>>} */
+    public function reporteHoy(): array
+    {
+        $resumen = $this->pdo->prepare(
+            'SELECT CURRENT_DATE() AS fecha, COUNT(*) AS cantidad, COALESCE(SUM(total), 0) AS total
+             FROM ventas WHERE creada_en >= CURRENT_DATE() AND creada_en < CURRENT_DATE() + INTERVAL 1 DAY'
+        );
+        $resumen->execute();
+        $datos = $resumen->fetch();
+        $productos = $this->pdo->prepare(
+            'SELECT d.sku, d.nombre, SUM(d.cantidad) AS unidades, SUM(d.subtotal) AS importe
+             FROM venta_detalles d JOIN ventas v ON v.id = d.venta_id
+             WHERE v.creada_en >= CURRENT_DATE() AND v.creada_en < CURRENT_DATE() + INTERVAL 1 DAY
+             GROUP BY d.sku, d.nombre ORDER BY importe DESC, d.sku'
+        );
+        $productos->execute();
+        $datos['productos'] = $productos->fetchAll();
+        return $datos;
+    }
+
     private static function dinero(int $centavos): string
     {
         return number_format($centavos / 100, 2, '.', '');

@@ -23,6 +23,7 @@ function encabezado(string $titulo): void
                     <a href="index.php">Inicio</a>
                     <a href="catalogo.php">Catálogo</a>
                     <a class="nav-action" href="crear.php">Nuevo ítem</a>
+                    <a href="venta_nueva.php">Cobrar venta</a>
                 </nav>
             </div>
         </header>

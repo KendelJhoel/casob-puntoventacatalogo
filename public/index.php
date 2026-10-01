@@ -12,10 +12,11 @@ encabezado('Inicio');
     <div>
         <p class="eyebrow">Administración del catálogo</p>
         <h1>Tu punto de venta, en un solo lugar.</h1>
-        <p>Organiza productos físicos, archivos digitales y servicios. La información se guarda en MySQL y está lista para registrar ventas.</p>
+        <p>Organiza productos físicos, archivos digitales y servicios. Consulta el catálogo y cobra ventas con información guardada en MySQL.</p>
         <div class="actions">
             <a class="button" href="catalogo.php">Ver catálogo <span aria-hidden="true">↗</span></a>
             <a class="button button-ghost" href="crear.php">Agregar ítem</a>
+            <a class="button button-ghost" href="venta_nueva.php">Cobrar venta</a>
         </div>
     </div>
     <div class="hero-stat" aria-label="Resumen del catálogo">

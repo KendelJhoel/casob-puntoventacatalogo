@@ -50,7 +50,8 @@ if (!is_file($configPath)) {
 }
 
 try {
-    $repo = new RepositorioItems(Conexion::crear(require $configPath));
+    $pdo = Conexion::crear(require $configPath);
+    $repo = new RepositorioItems($pdo);
 } catch (PDOException $e) {
     error_log($e->getMessage());
     http_response_code(503);

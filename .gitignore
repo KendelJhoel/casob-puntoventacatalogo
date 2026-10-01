@@ -5,4 +5,5 @@ composer.lock
 .vscode/
 tickets/*.json
 /config/config.php
-/public/uploads/
+/public/uploads/*
+!/public/uploads/.gitkeep

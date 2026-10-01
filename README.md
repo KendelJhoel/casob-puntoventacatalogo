@@ -1,98 +1,138 @@
 # casob-puntoventacatalogo
 
-Sistema de **Punto de Venta por consola** desarrollado en PHP con Programación Orientada a Objetos. Permite gestionar un catálogo de productos y servicios, armar un carrito de compras y generar un ticket de venta.
+Sistema de **Punto de Venta y Catálogo Web** desarrollado en PHP con Programación Orientada a Objetos. Gestiona un catálogo de productos y servicios, registra ventas desde el navegador y genera tickets históricos consultables. También conserva la interfaz de consola de la Fase 1.
 
-> **Caso B** — Ejercicio académico de POO en PHP: herencia, interfaces, excepciones personalizadas y autoloading PSR-4.
+> **Caso B** — Ejercicio académico (Periodo 2, 2026). Integrantes: Miguel, Diego, Kendel Jhoel, Rodolfo Rivas.
 
 ---
 
 ## Características
 
-- 🛒 Carrito de compras interactivo por terminal
+- 🌐 Interfaz web completa: catálogo, alta, edición, borrado, venta, ticket y reporte
+- 🛒 Punto de venta con validación de stock y transacción MySQL
 - 📦 **Productos Físicos** — con control de stock
 - 💻 **Productos Digitales** — sin stock, con enlace de descarga
 - 🛠️ **Servicios** — agendables, sin stock
-- 🧾 Emisión de ticket de compra (guardado en `/tickets`)
-- ⚠️ Excepción personalizada para stock insuficiente
+- 🧾 Ticket de compra histórico (no cambia si se edita el catálogo)
+- 🔒 CSRF, PRG, escape HTML y consultas preparadas
+- 🖥️ Versión de consola interactiva conservada (`php app.php`)
 
 ---
 
 ## Requisitos
 
-| Herramienta | Versión mínima |
-|-------------|----------------|
-| PHP         | 8.1 o superior |
-| Composer    | 2.x            |
+| Herramienta     | Versión mínima |
+|-----------------|----------------|
+| PHP             | 8.1 o superior |
+| MySQL / MariaDB | 8.0 / 10.5     |
+| Composer        | 2.x            |
 
-Verificá tu versión de PHP:
+Verifica tus versiones:
 
 ```bash
 php -v
+mysql --version
+composer --version
 ```
 
 ---
 
-## Instalación
+## Instalación — Aplicación Web
+
+### 1. Clonar el repositorio
 
 ```bash
-# 1. Clonar el repositorio
 git clone https://github.com/KendelJhoel/casob-puntoventacatalogo.git
 cd casob-puntoventacatalogo
+```
 
-# 2. Instalar dependencias (genera el autoloader de Composer)
+### 2. Instalar dependencias PHP
+
+```bash
 composer install
 ```
 
----
-
-## Uso
-
-Ejecutá el punto de entrada principal desde la raíz del proyecto:
+### 3. Configurar la conexión a la base de datos
 
 ```bash
+cp config/config.example.php config/config.php
+```
+
+Abre `config/config.php` y ajusta el host, puerto, nombre de base de datos, usuario y contraseña según tu entorno local.
+
+### 4. Crear la base de datos e importar el esquema
+
+```bash
+# Crea la base (si no existe)
+mysql -u root -p -e "CREATE DATABASE IF NOT EXISTS casob_puntoventa CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;"
+
+# Importa el esquema (crea las tablas desde cero)
+mysql -u root -p casob_puntoventa < database/schema.sql
+
+# Importa los datos de ejemplo (9 ítems: 3 físicos, 3 digitales, 3 servicios)
+mysql -u root -p casob_puntoventa < database/seed.sql
+```
+
+### 5. Levantar el servidor de desarrollo
+
+```bash
+php -S localhost:8000 -t public
+```
+
+### 6. Navegar la aplicación
+
+Abre tu navegador en `http://localhost:8000` y explora los módulos:
+
+| Ruta              | Módulo                    |
+|-------------------|---------------------------|
+| `index.php`       | Inicio / resumen          |
+| `catalogo.php`    | Listado del catálogo      |
+| `crear.php`       | Alta de ítem              |
+| `editar.php?id=N` | Edición de ítem           |
+| `detalle.php?id=N`| Ficha completa del ítem   |
+| `eliminar.php?id=N`| Confirmación de borrado  |
+| `venta_nueva.php` | Registrar una venta       |
+| `ventas.php`      | Historial de ventas       |
+| `venta.php?id=N`  | Ticket de una venta       |
+| `reporte.php`     | Reporte del día           |
+
+---
+
+## Instalación — Versión Consola (Fase 1)
+
+Solo requiere PHP y Composer (sin MySQL):
+
+```bash
+composer install
 php app.php
 ```
 
 ### Navegación del menú
 
-Una vez iniciado el sistema, verás el catálogo de productos y las siguientes opciones:
+| Tecla | Acción                           |
+|-------|----------------------------------|
+| `A`   | Agregar un ítem al carrito       |
+| `C`   | Cobrar y emitir ticket de compra |
+| `L`   | Limpiar el carrito               |
+| `S`   | Salir del sistema                |
 
-| Tecla | Acción                          |
-|-------|---------------------------------|
-| `A`   | Agregar un ítem al carrito      |
-| `C`   | Cobrar y emitir ticket de compra|
-| `L`   | Limpiar el carrito              |
-| `S`   | Salir del sistema               |
+El ticket se guarda en `tickets/ticket_XXXXXXXX.txt`.
 
-### Flujo típico
+---
 
-```
-1. Presioná [A] para agregar un producto.
-2. Ingresá el número del ítem (ej: 1 para Auriculares Bluetooth).
-3. Indicá la cantidad deseada.
-4. Repetí los pasos para agregar más ítems.
-5. Presioná [C] para cobrar → el ticket se guarda en /tickets.
-6. Presioná [S] para salir.
-```
+## Capturas de pantalla
 
-### Ejemplo de sesión
-
-```
-  Selecciona una opción: A
-  Ingresa el número del producto: 1
-  Cantidad: 2
-
-  ✔ Auriculares Bluetooth x2 agregado al carrito.
-
-  Selecciona una opción: C
-
-  ══════════════ TICKET DE COMPRA ══════════════
-  Auriculares Bluetooth x2       $115.00
-  ─────────────────────────────────────────────
-  TOTAL:                         $115.00
-  ══════════════════════════════════════════════
-  Ticket guardado en: tickets/ticket_XXXXXXXX.txt
-```
+| Módulo | Vista |
+|--------|-------|
+| Inicio | ![Inicio](public/assets/capturas/01-inicio.png) |
+| Catálogo | ![Catálogo](public/assets/capturas/02-catalogo.png) |
+| Alta de ítem | ![Crear](public/assets/capturas/03-crear.png) |
+| Edición de ítem | ![Editar](public/assets/capturas/04-editar.png) |
+| Ficha de ítem | ![Detalle](public/assets/capturas/05-detalle.png) |
+| Nueva venta | ![Venta](public/assets/capturas/06-venta-nueva.png) |
+| Historial de ventas | ![Ventas](public/assets/capturas/07-ventas.png) |
+| Ticket de venta | ![Ticket](public/assets/capturas/08-ticket.png) |
+| Reporte del día | ![Reporte](public/assets/capturas/09-reporte.png) |
 
 ---
 
@@ -100,28 +140,44 @@ Una vez iniciado el sistema, verás el catálogo de productos y las siguientes o
 
 ```
 casob-puntoventacatalogo/
-├── app.php                          # Punto de entrada (UI interactiva)
+├── app.php                          # Punto de entrada consola
+├── main.php                         # Catálogo de ejemplo para consola
 ├── composer.json
+├── config/
+│   ├── config.example.php           # Plantilla de configuración (versionar)
+│   └── config.php                   # Configuración local (ignorada por Git)
+├── database/
+│   ├── schema.sql                   # Crea tablas desde cero
+│   └── seed.sql                     # Datos de ejemplo (3 por tipo)
+├── public/                          # Raíz web (apuntar aquí el servidor)
+│   ├── index.php                    # Inicio
+│   ├── catalogo.php
+│   ├── crear.php / editar.php / detalle.php / eliminar.php
+│   ├── venta_nueva.php / ventas.php / venta.php / reporte.php
+│   ├── _init.php                    # Bootstrap: PDO, sesión, helpers
+│   ├── _layout.php                  # Cabecera y pie HTML compartidos
+│   ├── _formulario_item.php         # Partial del formulario de ítems
+│   ├── assets/
+│   │   ├── styles.css               # Hoja de estilos propia
+│   │   ├── forms.js                 # Lógica JS del formulario
+│   │   └── sin-imagen.svg           # Imagen por defecto
+│   └── uploads/                     # Imágenes subidas (ignoradas por Git)
 ├── src/
-│   ├── Contratos/
-│   │   └── Facturable.php           # Interface base para ítems vendibles
-│   ├── Excepciones/
-│   │   └── StockInsuficienteException.php
-│   ├── Modelos/
-│   │   ├── ItemVendible.php         # Clase abstracta base
-│   │   ├── ProductoFisico.php       # Hereda de ItemVendible, maneja stock
-│   │   ├── ProductoDigital.php
-│   │   └── Servicio.php
-│   └── Servicios/
-│       └── Carrito.php              # Lógica del carrito y emisión de ticket
-└── tickets/                         # Tickets generados (ignorados por git)
+│   ├── Contratos/Facturable.php
+│   ├── Excepciones/StockInsuficienteException.php
+│   ├── Infraestructura/             # Conexión PDO
+│   ├── Modelos/                     # ItemVendible, ProductoFisico, etc.
+│   ├── Repositorios/                # RepositorioItems, RepositorioVentas
+│   └── Servicios/                   # Carrito, GestorImagenes, ItemFactory, Validador
+├── tests/                           # Scripts de comprobación
+└── tickets/                         # Tickets de consola (.txt, ignorados por Git)
 ```
 
 ---
 
 ## Autoloading
 
-El proyecto usa el estándar **PSR-4** via Composer. El namespace raíz `App\` mapea a `src/`:
+El proyecto usa **PSR-4** vía Composer. El namespace raíz `App\` mapea a `src/`:
 
 ```json
 "autoload": {
@@ -131,7 +187,7 @@ El proyecto usa el estándar **PSR-4** via Composer. El namespace raíz `App\` m
 }
 ```
 
-Si agregás nuevas clases, regenerá el autoloader con:
+Si agregas nuevas clases, regenera el autoloader:
 
 ```bash
 composer dump-autoload
@@ -139,6 +195,11 @@ composer dump-autoload
 
 ---
 
-## Autor
+## Integrantes
 
-**Rodolfo Rivas**
+| Nombre        | Rama      | Responsabilidad principal                     |
+|---------------|-----------|-----------------------------------------------|
+| Miguel        | `Miguel`  | Fase 1 — Modelo POO, BD y repositorio         |
+| Diego         | `Diego`   | Fase 1 — Interfaz web, imágenes               |
+| Kendel Jhoel  | `ken`     | Fase 2 — Ventas, ticket y reporte             |
+| Rodolfo Rivas | `Rodolfo` | Fase 3 — Verificación, README e informe final |

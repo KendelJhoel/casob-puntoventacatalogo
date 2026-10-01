@@ -14,8 +14,10 @@ use App\Contratos\Facturable;
 abstract class ItemVendible implements Facturable
 {
     /**
-     * El ID/SKU del ítem es inmutable tras su creación (readonly).
-     * Esto protege la identidad del producto en el sistema.
+     * [ENCAPSULAMIENTO] Las propiedades son protected/readonly para que
+     * el estado interno no pueda modificarse desde fuera de la jerarquía
+     * de clases. Los invariantes (SKU, nombre, precio) se validan aquí
+     * y no pueden quedar en estado inválido.
      */
     public function __construct(
         protected readonly string $id,

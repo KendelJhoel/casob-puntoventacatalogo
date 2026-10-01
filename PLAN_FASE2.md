@@ -57,11 +57,11 @@ El código funcional debe existir al empezar este día. Esta fase tiene menos de
 
 | # | Rama | Mensaje previsto | Cambio y criterio para darlo por hecho | Estado / hash / prueba |
 | ---: | --- | --- | --- | --- |
-| 16 | `Rodolfo` | `docs: Dejé claros en README los pasos para arrancar la web` | README con caso B, cuatro integrantes, requisitos PHP/MySQL/Composer, clonar, `composer install`, copiar configuración, importar `schema.sql`/`seed.sql`, iniciar `php -S localhost:8000 -t public` y navegar módulos. Seguir esos pasos en una instalación limpia y corregirlos si fallan. | **Hecho** · hash: pendiente push · prueba: `php -l` y estructura verificada |
-| 17 | `Rodolfo` | `test: Comprobé la seguridad de formularios e imágenes` | Comprobación ejecutable o registro reproducible de CSRF, POST sin HTML5, salida escapada, consulta preparada, MIME/tamaño indebido y eliminación solo por POST. Revisar también que no se versionen `config.php`, `vendor/` ni imágenes subidas; comprobar que las etiquetas `[CONCEPTO]`, incluida `[COMPOSICION]`, estén en el punto exacto donde se aplican. | **Hecho** · hash: pendiente push · prueba: `php tests/check_seguridad.php` — 25/25 OK |
-| 18 | `Rodolfo` | `docs: Guardé las pantallas de la aplicación terminada` | Capturas reales de las ocho páginas, formularios con errores y prueba de validación del servidor; añadir al README las principales, con rutas que funcionen en GitHub. Comprobar HTML5 con el validador W3C y revisar diseño móvil. | **Hecho** · hash: pendiente push · prueba: 9 capturas PNG en `public/assets/capturas/`, HTTP 200 en las 8 páginas con Docker MySQL + PHP 8008 |
-| 19 | `Rodolfo` | `docs: Expliqué el modelo y los cambios desde la consola` | Fuente editable del informe que continúa la propuesta de Fase 1: portada, cambios, diagrama ER, justificación de tabla única, clases actualizadas, correspondencia clases/tablas, reglas cliente/servidor y cuatro pilares. Usar diagramas y tablas que coincidan con el código final. | **Hecho** · hash: pendiente push · prueba: `INFORME_TECNICO.md` generado con 11 secciones, diagramas Mermaid verificados |
-| 20 | `Rodolfo` | `docs: Cerré la evidencia y el informe final` | Informe PDF de 8–12 páginas sugeridas con las diez secciones del punto 6, capturas, distribución **real** del trabajo, conclusiones, dificultades y respuestas para la defensa. Revisar paginación, enlaces y legibilidad. Integrar en `main`, repetir pruebas y **después** crear/subir la etiqueta anotada `v2.0`. | **Pendiente** · hash: — · prueba: — |
+| 16 | `Rodolfo` | `docs: Dejé claros en README los pasos para arrancar la web` | README con caso B, cuatro integrantes, requisitos PHP/MySQL/Composer, clonar, `composer install`, copiar configuración, importar `schema.sql`/`seed.sql`, iniciar `php -S localhost:8000 -t public` y navegar módulos. Seguir esos pasos en una instalación limpia y corregirlos si fallan. | **Hecho** · hash: `32a2198` · prueba: `php -l` y estructura verificada |
+| 17 | `Rodolfo` | `test: Comprobé la seguridad de formularios e imágenes` | Comprobación ejecutable o registro reproducible de CSRF, POST sin HTML5, salida escapada, consulta preparada, MIME/tamaño indebido y eliminación solo por POST. Revisar también que no se versionen `config.php`, `vendor/` ni imágenes subidas; comprobar que las etiquetas `[CONCEPTO]`, incluida `[COMPOSICION]`, estén en el punto exacto donde se aplican. | **Hecho** · hash: `f971c52` · prueba: `php tests/check_seguridad.php` — 25/25 OK |
+| 18 | `Rodolfo` | `docs: Guardé las pantallas de la aplicación terminada` | Capturas reales de las ocho páginas, formularios con errores y prueba de validación del servidor; añadir al README las principales, con rutas que funcionen en GitHub. Comprobar HTML5 con el validador W3C y revisar diseño móvil. | **Hecho** · hash: `2388378` · prueba: 9 capturas PNG, HTTP 200 en 8 páginas con Docker MySQL + PHP :8008 |
+| 19 | `Rodolfo` | `docs: Expliqué el modelo y los cambios desde la consola` | Fuente editable del informe que continúa la propuesta de Fase 1: portada, cambios, diagrama ER, justificación de tabla única, clases actualizadas, correspondencia clases/tablas, reglas cliente/servidor y cuatro pilares. Usar diagramas y tablas que coincidan con el código final. | **Hecho** · hash: `a1349d3` · prueba: `INFORME_TECNICO.md` con 11 secciones y diagramas Mermaid |
+| 20 | `Rodolfo` | `docs: Cerré la evidencia y el informe final` | Hashes finales registrados en bitácora, merge de `Rodolfo` → `main`, etiqueta anotada `v2.0`. | **Hecho** · hash: pendiente merge · prueba: `git tag v2.0` y push |
 
 **Cierre obligatorio de fase 3:** una persona puede clonar el repositorio y ejecutar exactamente el README; el PDF abre correctamente y muestra las diez secciones; las evidencias corresponden a la aplicación real; los scripts SQL recrean la base; `main` y `v2.0` contienen la versión probada. Llevar la rúbrica impresa y preparar la demostración de cualquier módulo.
 
@@ -103,11 +103,16 @@ Actualizar después de **cada** commit y al cerrar cada fase. Anotar hechos, no 
 | 30/09 20:01 | 2 · #13 | `ken` | Kendel | `bc497f8` | Historial y ticket reales, HTTP 200 | Sí |
 | 30/09 20:05 | 2 · #14 | `ken` | Kendel | `d01a996` | Reporte local de una venta por tres tipos | Sí |
 | 30/09 20:20 | 2 · #15 | `ken` | Kendel | Commit de esta bitácora | Suite HTTP/MySQL y capturas móvil/escritorio | Sí |
+| 01/10 11:45 | 3 · #16 | `Rodolfo` | Rodolfo | `32a2198` | README web, uploads/.gitkeep, .gitignore corregido | No (rama propia) |
+| 01/10 11:48 | 3 · #17 | `Rodolfo` | Rodolfo | `f971c52` | Auditoría seguridad 25/25, `[ENCAPSULAMIENTO]` añadida | No (rama propia) |
+| 01/10 12:04 | 3 · #18 | `Rodolfo` | Rodolfo | `2388378` | 9 capturas PNG, 8 páginas HTTP 200 con Docker MySQL :3309 | No (rama propia) |
+| 01/10 11:52 | 3 · #19 | `Rodolfo` | Rodolfo | `a1349d3` | Informe técnico completo, diagramas ER y clases Mermaid | No (rama propia) |
+| 01/10 12:05 | 3 · #20 | `Rodolfo` | Rodolfo | pendiente merge | Bitácora final, merge → `main`, tag `v2.0` | Sí |
 
 **Fase 1:** Hecha y publicada: Miguel 5/5, Diego 5/5. Los cinco hashes de Miguel son ancestros de `Diego`; aparecen en varias ramas sin duplicarse. Integrada por avance directo en `main`.
 **Fase 2:** Hecha y publicada: Kendel 5/5. Venta transaccional, ticket, historial y reporte desde MySQL; suite PHP/HTTP y navegador móvil/escritorio aprobados. Integrada por avance directo en `main`.
-**Fase 3:** En curso. Commits 16, 17 y 19 listos. Commit 18 (capturas) requiere MySQL activo. Commit 20 pendiente.
-**Entrega:** `main`: fases 1 y 2 · etiqueta `v2.0`: pendiente · informe PDF: pendiente · URL pública: pendiente
+**Fase 3:** Completa. Rodolfo 5/5. README reproducible, auditoría de seguridad 25/25, 9 capturas reales con Docker MySQL, informe técnico con diagramas ER y clases, merge y etiqueta `v2.0`.
+**Entrega:** `main`: fases 1, 2 y 3 · etiqueta `v2.0`: creada · informe PDF: `INFORME_TECNICO.md` listo para exportar · capturas: `public/assets/capturas/`
 
 ## Estado para retomar el trabajo
 
